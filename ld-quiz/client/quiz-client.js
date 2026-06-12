@@ -1,0 +1,262 @@
+class QuizClient {
+  constructor() {
+    this.ws = null;
+    this.roomId = null;
+    this.participantId = null;
+    this.state = 'join'; // join, question, results, ended
+  }
+
+  init() {
+    const urlParams = new URLSearchParams(window.location.search);
+    this.roomId = urlParams.get('room');
+    
+    if (!this.roomId) {
+      this.showError('No room ID provided');
+      return;
+    }
+
+    document.getElementById('room-id').textContent = this.roomId;
+    this.renderJoinForm();
+  }
+
+  renderJoinForm() {
+    const content = document.getElementById('content');
+    content.innerHTML = `
+      <form id="join-form">
+        <input type="text" id="name" class="input" placeholder="Enter your name" maxlength="30" required>
+        <button type="submit" class="btn btn-primary">Join Quiz</button>
+      </form>
+    `;
+
+    document.getElementById('join-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      if (!name) return;
+      this.connect(name);
+    });
+  }
+
+  connect(name) {
+    const wsUrl = window.location.origin.replace(/^http/, 'ws');
+    this.ws = new WebSocket(`${wsUrl}/ws`);
+
+    this.ws.onopen = () => {
+      this.ws.send(JSON.stringify({
+        type: 'join_room',
+        roomId: this.roomId,
+        name: name
+      }));
+    };
+
+    this.ws.onmessage = (event) => {
+      const msg = JSON.parse(event.data);
+      this.handleMessage(msg);
+    };
+
+    this.ws.onclose = () => {
+      if (this.state !== 'ended') {
+        this.showError('Connection lost. Please refresh the page.');
+      }
+    };
+
+    this.ws.onerror = () => {
+      this.showError('Connection error');
+    };
+  }
+
+  handleMessage(msg) {
+    switch (msg.type) {
+      case 'joined':
+        this.participantId = msg.participantId;
+        this.state = 'joined';
+        this.renderWaiting();
+        break;
+
+      case 'question':
+        this.state = 'question';
+        this.renderQuestion(msg.question, msg.questionIndex, msg.totalQuestions, msg.startTime);
+        break;
+
+      case 'results':
+        this.state = 'results';
+        this.renderResults(msg.leaderboard, msg.questionIndex, msg.waiting);
+        break;
+
+      case 'game_ended':
+        this.state = 'ended';
+        this.renderFinalResults(msg.leaderboard);
+        break;
+
+      case 'answer_accepted':
+        this.renderWaiting('Answer submitted! Waiting for results...');
+        break;
+
+      case 'kicked':
+        this.showError('You have been removed from the quiz');
+        break;
+
+      case 'error':
+        this.showError(msg.message);
+        break;
+    }
+  }
+
+  renderWaiting(message = 'Waiting for the quiz to start...') {
+    const content = document.getElementById('content');
+    content.innerHTML = `
+      <div class="waiting">
+        <div class="spinner"></div>
+        <p>${message}</p>
+      </div>
+    `;
+  }
+
+  renderQuestion(question, index, total, startTime) {
+    const content = document.getElementById('content');
+    const timeLimit = question.timeLimit || 0;
+    let timerHtml = '';
+    
+    if (timeLimit > 0) {
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      const remaining = Math.max(0, timeLimit - elapsed);
+      timerHtml = `<div class="timer ${remaining <= 5 ? 'urgent' : ''}" id="timer">${remaining}</div>`;
+    }
+
+    let inputHtml = '';
+    if (question.type === 'multiple-choice') {
+      inputHtml = `
+        <div class="options">
+          ${question.options.map((opt, i) => `
+            <button class="option-btn" data-index="${i}">${opt}</button>
+          `).join('')}
+        </div>
+      `;
+    } else if (question.type === 'estimation') {
+      inputHtml = `
+        <form id="answer-form">
+          <input type="number" id="answer" class="input" placeholder="Your estimate" step="any" required>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+      `;
+    }
+
+    content.innerHTML = `
+      <div class="question">
+        <div class="question-counter">Question ${index + 1} of ${total}</div>
+        ${timerHtml}
+        <div class="question-text" id="question-text">${question.text}</div>
+        ${inputHtml}
+      </div>
+    `;
+
+    if (timeLimit > 0) {
+      const timerEl = document.getElementById('timer');
+      const interval = setInterval(() => {
+        const elapsed = Math.floor((Date.now() - startTime) / 1000);
+        const remaining = Math.max(0, timeLimit - elapsed);
+        if (timerEl) {
+          timerEl.textContent = remaining;
+          if (remaining <= 5) timerEl.classList.add('urgent');
+        }
+        if (remaining <= 0) {
+          clearInterval(interval);
+        }
+      }, 1000);
+    }
+
+    if (question.type === 'multiple-choice') {
+      document.querySelectorAll('.option-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const index = parseInt(btn.dataset.index);
+          this.submitAnswer(index);
+        });
+      });
+    } else if (question.type === 'estimation') {
+      document.getElementById('answer-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const answer = parseFloat(document.getElementById('answer').value);
+        if (isNaN(answer)) return;
+        this.submitAnswer(answer);
+      });
+    }
+  }
+
+  renderResults(leaderboard, questionIndex, waiting) {
+    const content = document.getElementById('content');
+    const myEntry = leaderboard.find(e => e.id === this.participantId);
+    const myRank = myEntry ? leaderboard.indexOf(myEntry) + 1 : '-';
+    
+    const listHtml = leaderboard.slice(0, 5).map((entry, i) => `
+      <div class="leaderboard-item ${entry.id === this.participantId ? 'me' : ''}">
+        <span class="rank">${i + 1}</span>
+        <span class="name">${this.escapeHtml(entry.name)}</span>
+        <span class="score">${entry.score}</span>
+      </div>
+    `).join('');
+
+    content.innerHTML = `
+      <div class="results">
+        <div class="question-counter">Results - Question ${questionIndex + 1}</div>
+        <div class="my-stats">Your rank: ${myRank} | Score: ${myEntry ? myEntry.score : 0}</div>
+        <div class="leaderboard">${listHtml}</div>
+        <p class="waiting-text">${waiting ? 'Waiting for next question...' : 'Quiz complete!'}</p>
+      </div>
+    `;
+  }
+
+  renderFinalResults(leaderboard) {
+    const content = document.getElementById('content');
+    const myEntry = leaderboard.find(e => e.id === this.participantId);
+    const myRank = myEntry ? leaderboard.indexOf(myEntry) + 1 : '-';
+    
+    const listHtml = leaderboard.slice(0, 10).map((entry, i) => `
+      <div class="leaderboard-item ${entry.id === this.participantId ? 'me' : ''}">
+        <span class="rank">${i + 1}</span>
+        <span class="name">${this.escapeHtml(entry.name)}</span>
+        <span class="score">${entry.score}</span>
+      </div>
+    `).join('');
+
+    content.innerHTML = `
+      <div class="results">
+        <h2>Final Results</h2>
+        <div class="my-stats">Your rank: ${myRank} | Score: ${myEntry ? myEntry.score : 0}</div>
+        <div class="leaderboard">${listHtml}</div>
+        <p class="waiting-text">Thank you for participating!</p>
+      </div>
+    `;
+  }
+
+  submitAnswer(answer) {
+    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+      this.ws.send(JSON.stringify({
+        type: 'submit_answer',
+        answer: answer
+      }));
+      this.renderWaiting('Answer submitted!');
+    }
+  }
+
+  showError(message) {
+    document.getElementById('content').innerHTML = `
+      <div class="error">${this.escapeHtml(message)}</div>
+    `;
+  }
+
+  escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+}
+
+// Initialize when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    const client = new QuizClient();
+    client.init();
+  });
+} else {
+  const client = new QuizClient();
+  client.init();
+}

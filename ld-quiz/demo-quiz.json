@@ -1,0 +1,33 @@
+{
+  "title": "Mathematics Quiz",
+  "questions": [
+    {
+      "type": "multiple-choice",
+      "text": "What is the derivative of \\( x^2 \\)?",
+      "options": [
+        "\\( 2x \\)",
+        "\\( x \\)",
+        "\\( x^2 \\)"
+      ],
+      "correctIndex": 0,
+      "timeLimit": 30
+    },
+    {
+      "type": "estimation",
+      "text": "Estimate the value of \\( \\sqrt{2} \\) to 2 decimal places.",
+      "correctAnswer": 1.41,
+      "timeLimit": 45
+    },
+    {
+      "type": "multiple-choice",
+      "text": "What is the integral of \\( \\frac{1}{x} \\)?",
+      "options": [
+        "\\( \\ln|x| + C \\)",
+        "\\( x + C \\)",
+        "\\( \\frac{1}{x^2} + C \\)"
+      ],
+      "correctIndex": 0,
+      "timeLimit": 30
+    }
+  ]
+}
