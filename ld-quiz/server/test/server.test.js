@@ -37,7 +37,6 @@ describe('Server Integration', () => {
     app.use(express.static(join(__dirname, '../../public')));
     app.use('/shared', express.static(join(__dirname, '../../shared')));
     app.use('/client', express.static(join(__dirname, '../../client')));
-    app.use('/katex', express.static(join(__dirname, '../node_modules/katex/dist')));
     
     // API endpoint
     app.get('/api/sessions', (req, res) => {

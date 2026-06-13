@@ -6,6 +6,33 @@ class QuizClient {
     this.state = 'join'; // join, question, results, ended
   }
 
+  // Client-side validation (must match server-side)
+  static NAME_PATTERN = /^[\p{L}][\p{L}'\- ]{0,48}[\p{L}]$/u;
+  static NAME_MIN_LENGTH = 2;
+  static NAME_MAX_LENGTH = 50;
+
+  static validateName(name) {
+    if (!name || typeof name !== 'string') {
+      return { valid: false, error: 'Name is required' };
+    }
+    
+    const trimmed = name.trim();
+    
+    if (trimmed.length < QuizClient.NAME_MIN_LENGTH) {
+      return { valid: false, error: `Name must be at least ${QuizClient.NAME_MIN_LENGTH} characters` };
+    }
+    
+    if (trimmed.length > QuizClient.NAME_MAX_LENGTH) {
+      return { valid: false, error: `Name must be at most ${QuizClient.NAME_MAX_LENGTH} characters` };
+    }
+    
+    if (!QuizClient.NAME_PATTERN.test(trimmed)) {
+      return { valid: false, error: 'Name must contain only letters, spaces, hyphens, and apostrophes' };
+    }
+    
+    return { valid: true, name: trimmed };
+  }
+
   init() {
     const urlParams = new URLSearchParams(window.location.search);
     this.roomId = urlParams.get('room');
@@ -23,16 +50,27 @@ class QuizClient {
     const content = document.getElementById('content');
     content.innerHTML = `
       <form id="join-form">
-        <input type="text" id="name" class="input" placeholder="Enter your name" maxlength="30" required>
+        <input type="text" id="name" class="input" placeholder="Enter your name" maxlength="50" required>
         <button type="submit" class="btn btn-primary">Join Quiz</button>
+        <div id="name-error" class="error-text" style="display:none;margin-top:0.5rem;color:var(--error-color)"></div>
       </form>
     `;
 
     document.getElementById('join-form').addEventListener('submit', (e) => {
       e.preventDefault();
-      const name = document.getElementById('name').value.trim();
-      if (!name) return;
-      this.connect(name);
+      const nameInput = document.getElementById('name');
+      const name = nameInput.value.trim();
+      const errorEl = document.getElementById('name-error');
+      
+      const validation = QuizClient.validateName(name);
+      if (!validation.valid) {
+        errorEl.textContent = validation.error;
+        errorEl.style.display = 'block';
+        return;
+      }
+      
+      errorEl.style.display = 'none';
+      this.connect(validation.name);
     });
   }
 

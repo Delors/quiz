@@ -71,6 +71,58 @@ describe('Room', () => {
     assert.strictEqual(room.submitAnswer(p.id, 0), false);
   });
 
+  it('submitAnswer auto-ends when all participants answered', () => {
+    const quiz = { title: 'Test', questions: [{ type: 'multiple-choice', text: 'Q1', options: ['A', 'B'], correctIndex: 0 }] };
+    const room = new Room('ABC123', 'token', quiz);
+    let autoEndCalled = false;
+    room.onAutoEnd = (results) => {
+      autoEndCalled = true;
+    };
+    const ws1 = { readyState: 1 };
+    const ws2 = { readyState: 1 };
+    const p1 = room.addParticipant(ws1, 'Alice');
+    const p2 = room.addParticipant(ws2, 'Bob');
+
+    room.startGame();
+    room.submitAnswer(p1.id, 0);
+    assert.strictEqual(room.state, 'question');
+    room.submitAnswer(p2.id, 1);
+    assert.strictEqual(room.state, 'results');
+    assert.strictEqual(autoEndCalled, true);
+  });
+
+  it('time limit auto-ends question', async () => {
+    const quiz = { title: 'Test', questions: [{ type: 'multiple-choice', text: 'Q1', options: ['A', 'B'], correctIndex: 0, timeLimit: 0.05 }] };
+    const room = new Room('ABC123', 'token', quiz);
+    let autoEndCalled = false;
+    room.onAutoEnd = (results) => {
+      autoEndCalled = true;
+    };
+    room.addParticipant({ readyState: 1 }, 'Alice');
+
+    room.startGame();
+    assert.strictEqual(room.state, 'question');
+    await new Promise(resolve => setTimeout(resolve, 100));
+    assert.strictEqual(room.state, 'results');
+    assert.strictEqual(autoEndCalled, true);
+  });
+
+  it('endQuestion is idempotent', () => {
+    const quiz = { title: 'Test', questions: [{ type: 'multiple-choice', text: 'Q1', options: ['A', 'B'], correctIndex: 0 }] };
+    const room = new Room('ABC123', 'token', quiz);
+    const ws1 = { readyState: 1 };
+    const p1 = room.addParticipant(ws1, 'Alice');
+
+    room.startGame();
+    room.submitAnswer(p1.id, 0);
+    const results1 = room.endQuestion();
+    const results2 = room.endQuestion();
+    assert.strictEqual(results1.scores.get(p1.id), 100);
+    assert.strictEqual(results2.scores.get(p1.id), 100);
+    assert.strictEqual(results1.leaderboard[0].score, 100);
+    assert.strictEqual(results2.leaderboard[0].score, 100);
+  });
+
   it('scoreQuestion multiple-choice: correct gets 100, wrong gets 0', () => {
     const quiz = { title: 'Test', questions: [{ type: 'multiple-choice', text: 'Q1', options: ['A', 'B'], correctIndex: 0 }] };
     const room = new Room('ABC123', 'token', quiz);
@@ -189,9 +241,28 @@ describe('Room', () => {
       readyState: 1,
       send: (data) => { sent = JSON.parse(data); }
     };
-    room.setPresenter(mockWs);
+    room.addPresenter(mockWs);
     room.sendToPresenter({ type: 'test' });
     assert.deepStrictEqual(sent, { type: 'test' });
+  });
+
+  it('sendToPresenter sends to all presenter websockets', () => {
+    const room = new Room('ABC123', 'token', { title: 'Test', questions: [] });
+    const messages = [];
+    const mockPresenter1 = {
+      readyState: 1,
+      send: (data) => { messages.push(JSON.parse(data)); }
+    };
+    const mockPresenter2 = {
+      readyState: 1,
+      send: (data) => { messages.push(JSON.parse(data)); }
+    };
+    room.addPresenter(mockPresenter1);
+    room.addPresenter(mockPresenter2);
+    room.sendToPresenter({ type: 'test' });
+    assert.strictEqual(messages.length, 2);
+    assert.deepStrictEqual(messages[0], { type: 'test' });
+    assert.deepStrictEqual(messages[1], { type: 'test' });
   });
 
   it('broadcast sends to all participants and presenter', () => {
@@ -203,7 +274,7 @@ describe('Room', () => {
     
     room.addParticipant(mockWs1, 'Alice');
     room.addParticipant(mockWs2, 'Bob');
-    room.setPresenter(mockPresenter);
+    room.addPresenter(mockPresenter);
     room.broadcast({ type: 'hello' });
     
     assert.strictEqual(messages.length, 3);
@@ -233,7 +304,7 @@ describe('Room', () => {
     const mockPresenter = { readyState: 1, send: (d) => messages.push(JSON.parse(d)) };
     
     room.addParticipant(mockWs1, 'Alice');
-    room.setPresenter(mockPresenter);
+    room.addPresenter(mockPresenter);
     room.broadcastToParticipants({ type: 'hello' });
     
     assert.strictEqual(messages.length, 1);

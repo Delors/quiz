@@ -10,8 +10,10 @@ class Room {
     this.currentQuestionIndex = -1;
     this.currentQuestionStartTime = null;
     this.currentAnswers = new Map(); // participantId -> { answer, timestamp }
-    this.presenterWs = null;
+    this.presenterWss = new Set();
     this.createdAt = Date.now();
+    this.questionTimer = null;
+    this.onAutoEnd = null; // callback(results) -> void
   }
 
   addParticipant(ws, name) {
@@ -41,8 +43,12 @@ class Room {
     return this.participants.size;
   }
 
-  setPresenter(ws) {
-    this.presenterWs = ws;
+  addPresenter(ws) {
+    this.presenterWss.add(ws);
+  }
+
+  removePresenter(ws) {
+    this.presenterWss.delete(ws);
   }
 
   startGame() {
@@ -55,23 +61,46 @@ class Room {
     this.currentAnswers = new Map();
     this.currentQuestionStartTime = Date.now();
     this.state = 'question';
+    this.clearQuestionTimer();
+
+    const question = this.getCurrentQuestion();
+    if (question && question.timeLimit > 0 && typeof this.onAutoEnd === 'function') {
+      this.questionTimer = setTimeout(() => {
+        this.autoEndQuestion();
+      }, question.timeLimit * 1000);
+    }
   }
 
   submitAnswer(participantId, answer) {
     if (this.state !== 'question') return false;
     if (this.currentAnswers.has(participantId)) return false;
-    
+
     this.currentAnswers.set(participantId, {
       answer,
       timestamp: Date.now()
     });
+
+    // Auto-end if all participants have answered
+    if (this.participants.size > 0 && this.currentAnswers.size === this.participants.size) {
+      this.clearQuestionTimer();
+      this.autoEndQuestion();
+    }
+
     return true;
   }
 
   endQuestion() {
+    this.clearQuestionTimer();
     const question = this.quiz.questions[this.currentQuestionIndex];
+
+    if (this.state === 'results') {
+      const results = this.scoreQuestion(question);
+      results.leaderboard = this.getLeaderboard();
+      return results;
+    }
+
     const results = this.scoreQuestion(question);
-    
+
     // Update participant scores
     for (const [participantId, points] of results.scores) {
       const participant = this.getParticipantById(participantId);
@@ -90,6 +119,21 @@ class Room {
     results.leaderboard = this.getLeaderboard();
     this.state = 'results';
     return results;
+  }
+
+  clearQuestionTimer() {
+    if (this.questionTimer) {
+      clearTimeout(this.questionTimer);
+      this.questionTimer = null;
+    }
+  }
+
+  autoEndQuestion() {
+    if (this.state !== 'question') return;
+    const results = this.endQuestion();
+    if (typeof this.onAutoEnd === 'function') {
+      this.onAutoEnd(results);
+    }
   }
 
   scoreQuestion(question) {
@@ -178,8 +222,10 @@ class Room {
         ws.send(msg);
       }
     }
-    if (this.presenterWs && this.presenterWs !== excludeWs && this.presenterWs.readyState === 1) {
-      this.presenterWs.send(msg);
+    for (const ws of this.presenterWss) {
+      if (ws !== excludeWs && ws.readyState === 1) {
+        ws.send(msg);
+      }
     }
   }
 
@@ -193,8 +239,11 @@ class Room {
   }
 
   sendToPresenter(message) {
-    if (this.presenterWs && this.presenterWs.readyState === 1) {
-      this.presenterWs.send(JSON.stringify(message));
+    const msg = JSON.stringify(message);
+    for (const ws of this.presenterWss) {
+      if (ws.readyState === 1) {
+        ws.send(msg);
+      }
     }
   }
 

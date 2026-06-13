@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { RoomManager } from './rooms.js';
 import { renderQuiz } from './math-renderer.js';
+import { validateName } from './name-validator.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -37,7 +38,6 @@ app.use(corsMiddleware);
 app.use(express.static(join(__dirname, '../public')));
 app.use('/shared', express.static(join(__dirname, '../shared')));
 app.use('/client', express.static(join(__dirname, '../client')));
-app.use('/katex', express.static(join(__dirname, '../node_modules/katex/dist')));
 
 // API endpoint for presenter sessions
 app.get('/api/sessions', (req, res) => {
@@ -78,9 +78,33 @@ function handleMessage(ws, data) {
         const { presenterToken, quiz } = msg;
         const renderedQuiz = renderQuiz(quiz);
         const room = roomManager.createRoom(presenterToken, renderedQuiz);
-        room.setPresenter(ws);
+        room.addPresenter(ws);
         ws.roomId = room.roomId;
         ws.role = 'presenter';
+        
+        room.onAutoEnd = (results) => {
+          room.broadcastToParticipants({
+            type: 'results',
+            questionIndex: room.currentQuestionIndex,
+            leaderboard: results.leaderboard,
+            waiting: room.currentQuestionIndex < room.quiz.questions.length - 1
+          });
+          room.sendToPresenter({
+            type: 'question_results',
+            questionIndex: room.currentQuestionIndex,
+            answers: Array.from(room.currentAnswers.entries()).map(([pid, data]) => {
+              const p = room.getParticipantById(pid);
+              return {
+                participantId: pid,
+                name: p?.name || 'Unknown',
+                answer: data.answer,
+                points: results.scores.get(pid) || 0,
+                timestamp: data.timestamp
+              };
+            }),
+            leaderboard: results.leaderboard
+          });
+        };
         
         ws.send(JSON.stringify({
           type: 'room_created',
@@ -93,13 +117,21 @@ function handleMessage(ws, data) {
 
       case 'join_room': {
         const { roomId, name } = msg;
+        
+        // Validate name first
+        const nameValidation = validateName(name);
+        if (!nameValidation.valid) {
+          ws.send(JSON.stringify({ type: 'error', message: nameValidation.error }));
+          return;
+        }
+        
         const room = roomManager.getRoom(roomId);
         if (!room) {
           ws.send(JSON.stringify({ type: 'error', message: 'Room not found' }));
           return;
         }
         
-        const participant = room.addParticipant(ws, name);
+        const participant = room.addParticipant(ws, nameValidation.name);
         ws.roomId = roomId;
         ws.role = 'participant';
         ws.participantId = participant.id;
@@ -157,7 +189,7 @@ function handleMessage(ws, data) {
             return;
           }
           
-          room.setPresenter(ws);
+        room.addPresenter(ws);
           ws.roomId = roomId;
           ws.role = 'presenter';
           
@@ -351,6 +383,7 @@ function handleDisconnect(ws) {
       } else if (ws.role === 'presenter') {
         // Don't close the room, just note that presenter is offline
         // They can reconnect via control.html
+        room.removePresenter(ws);
         room.sendToPresenter({
           type: 'presenter_disconnected',
           roomId: room.roomId

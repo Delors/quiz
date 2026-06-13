@@ -262,6 +262,19 @@ class QuizControl {
     if (stateEl) stateEl.textContent = state;
     if (questionEl) questionEl.textContent = `${this.roomState.currentQuestionIndex + 1} / ${this.roomState.totalQuestions}`;
     if (answerCountPanel) answerCountPanel.style.display = state === 'question' ? 'flex' : 'none';
+
+    // Disable "Next Question" button on the last question
+    const btnNext = document.getElementById('btn-next');
+    if (btnNext) {
+      const isLastQuestion = this.roomState.currentQuestionIndex + 1 >= this.roomState.totalQuestions;
+      if (isLastQuestion) {
+        btnNext.classList.add('btn-disabled');
+        btnNext.disabled = true;
+      } else {
+        btnNext.classList.remove('btn-disabled');
+        btnNext.disabled = false;
+      }
+    }
   }
 
   updateParticipantCount(count) {
