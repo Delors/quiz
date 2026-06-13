@@ -1,0 +1,306 @@
+{
+  "title": "Block Ciphers and Operations Modes",
+  "questions": [
+    {
+      "type": "multiple-choice",
+      "text": "What does ECB stand for in the context of block cipher modes?",
+      "options": [
+        "Electronic Codebook",
+        "Encrypted Cipher Block",
+        "Extended Cipher Base",
+        "Enhanced Cipher Block"
+      ],
+      "correctIndices": [0],
+      "timeLimit": 20
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Which block cipher mode processes each block independently without any chaining?",
+      "options": [
+        "ECB",
+        "CBC",
+        "CFB",
+        "OFB"
+      ],
+      "correctIndices": [0],
+      "timeLimit": 20
+    },
+    {
+      "type": "multiple-choice",
+      "text": "In CBC mode, what is the input for the first block's encryption?",
+      "options": [
+        "The plaintext block XORed with the previous ciphertext block",
+        "The plaintext block XORed with the Initialization Vector (IV)",
+        "The plaintext block directly",
+        "The previous ciphertext block directly"
+      ],
+      "correctIndices": [1],
+      "timeLimit": 25
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Which of the following block cipher modes can be used as a stream cipher without padding?",
+      "options": [
+        "ECB",
+        "CBC",
+        "CFB",
+        "OFB",
+        "CTR"
+      ],
+      "correctIndices": [2, 3, 4],
+      "timeLimit": 30
+    },
+    {
+      "type": "multiple-choice",
+      "text": "What is the main disadvantage of using ECB mode?",
+      "options": [
+        "It is very slow",
+        "It requires a very large key",
+        "Identical plaintext blocks produce identical ciphertext blocks",
+        "It cannot be used with AES"
+      ],
+      "correctIndices": [2],
+      "timeLimit": 25
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Which padding scheme fills the remaining bytes with the count of padding bytes?",
+      "options": [
+        "PKCS#7",
+        "ANSI X.923",
+        "ISO/IEC 7816-4",
+        "Zero Padding"
+      ],
+      "correctIndices": [0],
+      "timeLimit": 25
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Which padding scheme starts with 0x80 followed by zeros?",
+      "options": [
+        "PKCS#7",
+        "ANSI X.923",
+        "ISO/IEC 7816-4",
+        "Zero Padding"
+      ],
+      "correctIndices": [2],
+      "timeLimit": 25
+    },
+    {
+      "type": "multiple-choice",
+      "text": "In the context of block cipher modes, what is an IV (Initialization Vector)?",
+      "options": [
+        "A secret key used for encryption",
+        "A random value used to ensure identical plaintexts produce different ciphertexts",
+        "A checksum for data integrity",
+        "The first block of ciphertext"
+      ],
+      "correctIndices": [1],
+      "timeLimit": 25
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Which of the following are true about the Counter (CTR) mode?",
+      "options": [
+        "It is parallelizable",
+        "It requires padding",
+        "It allows random access to encrypted blocks",
+        "It requires only the encryption algorithm"
+      ],
+      "correctIndices": [0, 2, 3],
+      "timeLimit": 30
+    },
+    {
+      "type": "multiple-choice",
+      "text": "What is the block size of AES?",
+      "options": [
+        "64 bits",
+        "128 bits",
+        "256 bits",
+        "512 bits"
+      ],
+      "correctIndices": [1],
+      "timeLimit": 20
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Which of the following are key design principles of a Feistel cipher?",
+      "options": [
+        "Diffusion",
+        "Confusion",
+        "Avalanche Effect",
+        "Bit Independence"
+      ],
+      "correctIndices": [0, 1, 2, 3],
+      "timeLimit": 35
+    },
+    {
+      "type": "multiple-choice",
+      "text": "What is the effective key length of DES?",
+      "options": [
+        "64 bits",
+        "56 bits",
+        "128 bits",
+        "168 bits"
+      ],
+      "correctIndices": [1],
+      "timeLimit": 20
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Which of the following are true about the Triple-DES (3DES) with three keys?",
+      "options": [
+        "It is defined as C = E(K3, D(K2, E(K1, P)))",
+        "It has an effective key length of 168 bits",
+        "It is backward compatible with DES",
+        "It is vulnerable to the same meet-in-the-middle attack as double encryption"
+      ],
+      "correctIndices": [0, 1, 2],
+      "timeLimit": 35
+    },
+    {
+      "type": "multiple-choice",
+      "text": "What is the main purpose of the 'Tweak' in XTS-AES?",
+      "options": [
+        "To act as a second secret key",
+        "To provide variability without needing to be secret",
+        "To increase the block size",
+        "To replace the Initialization Vector"
+      ],
+      "correctIndices": [1],
+      "timeLimit": 25
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Which of the following block cipher modes are vulnerable to bit-flipping attacks if the IV is not integrity-protected?",
+      "options": [
+        "ECB",
+        "CBC",
+        "CFB",
+        "OFB"
+      ],
+      "correctIndices": [1],
+      "timeLimit": 30
+    },
+    {
+      "type": "multiple-choice",
+      "text": "In a Feistel cipher, what is the purpose of the final swap operation?",
+      "options": [
+        "To increase the key size",
+        "To make encryption and decryption use the same algorithm",
+        "To add confusion to the output",
+        "To ensure the block size is correct"
+      ],
+      "correctIndices": [1],
+      "timeLimit": 25
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Which of the following are true about the Strict Avalanche Criterion (SAC)?",
+      "options": [
+        "Each output bit should change with probability 1/2 when any input bit is flipped",
+        "It applies to S-Boxes",
+        "It requires that all output bits change simultaneously",
+        "It is a property of the key schedule"
+      ],
+      "correctIndices": [0, 1],
+      "timeLimit": 30
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Which padding schemes add an entire additional block when the message is already a multiple of the block size?",
+      "options": [
+        "PKCS#7",
+        "ANSI X.923",
+        "ISO/IEC 7816-4",
+        "Zero Padding"
+      ],
+      "correctIndices": [0, 1, 2],
+      "timeLimit": 30
+    },
+    {
+      "type": "multiple-choice",
+      "text": "What is the block size of the Data Encryption Standard (DES)?",
+      "options": [
+        "32 bits",
+        "64 bits",
+        "128 bits",
+        "256 bits"
+      ],
+      "correctIndices": [1],
+      "timeLimit": 20
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Which of the following are true about the Output Feedback (OFB) mode?",
+      "options": [
+        "It generates a keystream independent of the plaintext",
+        "It is a stream cipher mode",
+        "It requires padding",
+        "A single bit error in the ciphertext only affects the corresponding plaintext bit"
+      ],
+      "correctIndices": [0, 1, 3],
+      "timeLimit": 30
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Which of the following are valid key sizes for AES?",
+      "options": [
+        "128 bits",
+        "192 bits",
+        "256 bits",
+        "512 bits"
+      ],
+      "correctIndices": [0, 1, 2],
+      "timeLimit": 25
+    },
+    {
+      "type": "multiple-choice",
+      "text": "In Cipher Text Stealing (CTS), what is the key property?",
+      "options": [
+        "The ciphertext is always longer than the plaintext",
+        "The ciphertext is the same length as the plaintext",
+        "It requires an additional padding block",
+        "It can only be used with OFB mode"
+      ],
+      "correctIndices": [1],
+      "timeLimit": 25
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Which of the following are true about the Meet-in-the-Middle attack?",
+      "options": [
+        "It attacks double encryption",
+        "It requires a known plaintext-ciphertext pair",
+        "It reduces the effort from 2^112 to 2^56 for double DES",
+        "It makes triple DES with two keys as secure as triple DES with three keys"
+      ],
+      "correctIndices": [0, 1, 2],
+      "timeLimit": 35
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Which of the following correctly describes the avalanche effect in DES?",
+      "options": [
+        "A single bit change in the plaintext affects only the first block",
+        "A single bit change in the plaintext or key affects approximately half the ciphertext bits",
+        "A single bit change in the key affects only the last round",
+        "A single bit change in the plaintext affects only the corresponding output bit"
+      ],
+      "correctIndices": [1],
+      "timeLimit": 30
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Which of the following are true about the Rijndael algorithm (AES)?",
+      "options": [
+        "It was selected by NIST as the AES standard",
+        "It uses a Feistel network structure",
+        "It supports variable block sizes in its general form",
+        "It was the only finalist considered sufficiently secure"
+      ],
+      "correctIndices": [0, 2],
+      "timeLimit": 30
+    }
+  ]
+}
