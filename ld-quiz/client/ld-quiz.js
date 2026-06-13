@@ -174,6 +174,23 @@ class QuizHost extends HTMLElement {
         this.renderFinalResults(msg.leaderboard);
         break;
 
+      case 'answer_accepted':
+        // Only relevant if used as a participant client; ignore if results already shown
+        if (this.currentState !== 'results' && this.currentState !== 'ended') {
+          this.currentState = 'answer_accepted';
+          // Disable the submit button to prevent double submission
+          const submitBtn = this.shadowRoot.getElementById('quiz-submit-btn');
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitted';
+          }
+          // Disable option clicks
+          this.shadowRoot.querySelectorAll('.quiz-option').forEach(opt => {
+            opt.style.pointerEvents = 'none';
+          });
+        }
+        break;
+
       case 'error':
         this.showError(msg.message);
         break;

@@ -126,7 +126,10 @@ class QuizClient {
         break;
 
       case 'answer_accepted':
-        this.renderWaiting('Answer submitted! Waiting for results...');
+        // Ignore if results are already shown (e.g., question auto-ended)
+        if (this.state !== 'results' && this.state !== 'ended') {
+          this.renderWaiting('Answer submitted! Waiting for results...');
+        }
         break;
 
       case 'kicked':

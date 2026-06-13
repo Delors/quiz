@@ -304,11 +304,15 @@ function handleMessage(ws, data) {
       case 'submit_answer': {
         const room = roomManager.getRoom(ws.roomId);
         if (!room || ws.role !== 'participant') return;
-        
+
         const success = room.submitAnswer(ws.participantId, msg.answer);
         if (success) {
-          ws.send(JSON.stringify({ type: 'answer_accepted' }));
-          
+          // Only send answer_accepted if the question is still active.
+          // If auto-end triggered, the client will receive 'results' instead.
+          if (room.state === 'question') {
+            ws.send(JSON.stringify({ type: 'answer_accepted' }));
+          }
+
           // Notify presenter of answer count
           room.sendToPresenter({
             type: 'answer_count',
