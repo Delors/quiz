@@ -52,7 +52,7 @@ ld-quiz/
 
 ```bash
 cd server
-npm install
+pnpm install
 ```
 
 ### 2. Create a Quiz
@@ -93,10 +93,14 @@ node lib/encrypt-quiz.js my-quiz.json my-quiz-encrypted.txt
 
 ### 4. Start the Server
 
+For development:
+
 ```bash
 node server/server.js
 # Server runs on http://localhost:3000
 ```
+
+For production, see [Production Deployment](#6-production-deployment) below.
 
 ### 5. Embed the Quiz
 
@@ -131,7 +135,36 @@ ALLOWED_ORIGINS="https://slides.example.com,https://presenter.example.com" node 
 
 The client component automatically loads its CSS from the quiz server, so CORS is required for the stylesheet request as well.
 
-### 6. Run the Quiz
+### 6. Production Deployment
+
+For production, use **pm2** to ensure the server restarts automatically after crashes:
+
+```bash
+# Install pm2 globally (if not already installed)
+pnpm add -g pm2
+
+# Start the server with pm2
+cd server
+pm2 start server.js --name "quiz-server"
+
+# Save the pm2 process list so it auto-starts on boot
+pm2 save
+pm2 startup  # Follow the generated command to enable auto-start
+
+# Monitor and manage
+pm2 status           # View running processes
+pm2 logs quiz-server # View server logs
+pm2 monit            # Interactive dashboard
+pm2 reload quiz-server # Zero-downtime reload
+```
+
+**Why pm2?**
+- Cross-platform: works on macOS, Linux, and Windows
+- Auto-restart on crash or memory limit
+- Built-in log aggregation and monitoring
+- `pm2 startup` auto-generates the correct systemd/launchd service for any OS
+
+### 7. Run the Quiz
 
 1. Open the page containing the quiz component
 2. Enter your password to decrypt and start the quiz
@@ -214,8 +247,8 @@ The server includes a comprehensive test suite using Node.js's built-in test run
 
 ```bash
 cd server
-npm test           # Run all tests
-npm run test:watch # Run tests in watch mode
+pnpm test           # Run all tests
+pnpm test:watch     # Run tests in watch mode
 ```
 
 Tests cover:
