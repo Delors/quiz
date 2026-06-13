@@ -1,0 +1,239 @@
+{
+  "title": "TOR - The Onion Router Quiz",
+  "questions": [
+    {
+      "type": "multiple-choice",
+      "text": "What does TOR stand for?",
+      "options": [
+        "The Onion Router",
+        "The Online Relay",
+        "The Open Network",
+        "The Obfuscated Route"
+      ],
+      "correctIndex": 0,
+      "timeLimit": 20
+    },
+    {
+      "type": "multiple-choice",
+      "text": "When was the TOR code made freely available?",
+      "options": [
+        "2002",
+        "2003",
+        "2004",
+        "2005"
+      ],
+      "correctIndex": 2,
+      "timeLimit": 25
+    },
+    {
+      "type": "multiple-choice",
+      "text": "What type of network does TOR build?",
+      "options": [
+        "A peer-to-peer network",
+        "An overlay network on top of the Internet",
+        "A dedicated physical network",
+        "A satellite network"
+      ],
+      "correctIndex": 1,
+      "timeLimit": 25
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Which part of the Internet is NOT publicly accessible and requires special software like TOR?",
+      "options": [
+        "Surface Web",
+        "Deep Web",
+        "Dark Web",
+        "Clear Web"
+      ],
+      "correctIndex": 2,
+      "timeLimit": 25
+    },
+    {
+      "type": "multiple-choice",
+      "text": "In a typical TOR circuit, how many nodes does traffic pass through?",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "5"
+      ],
+      "correctIndex": 2,
+      "timeLimit": 20
+    },
+    {
+      "type": "multiple-choice",
+      "text": "What does the Entry Node (Guard Node) know about a connection?",
+      "options": [
+        "The IP of the client and the destination",
+        "Only the IP of the destination",
+        "Only the IP of the client",
+        "Neither the client nor the destination IP"
+      ],
+      "correctIndex": 2,
+      "timeLimit": 30
+    },
+    {
+      "type": "multiple-choice",
+      "text": "What does the Exit Node know about a connection?",
+      "options": [
+        "The IP of the client and the destination",
+        "Only the IP of the client",
+        "Only the IP of the destination",
+        "Neither the client nor the destination IP"
+      ],
+      "correctIndex": 2,
+      "timeLimit": 30
+    },
+    {
+      "type": "multiple-choice",
+      "text": "What is the purpose of Bridge Nodes in the TOR network?",
+      "options": [
+        "To make TOR faster",
+        "To provide entry points in countries where TOR is blocked",
+        "To handle exit traffic",
+        "To store the consensus document"
+      ],
+      "correctIndex": 1,
+      "timeLimit": 30
+    },
+    {
+      "type": "multiple-choice",
+      "text": "What is the fixed size of TOR cells (data packets exchanged between nodes)?",
+      "options": [
+        "256 bytes",
+        "512 bytes",
+        "1024 bytes",
+        "1500 bytes"
+      ],
+      "correctIndex": 1,
+      "timeLimit": 25
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Which of the following is NOT covered by TOR's threat model?",
+      "options": [
+        "An attacker observing part of the communication",
+        "An attacker controlling some TOR nodes",
+        "An attacker controlling both the Entry Guard and Exit Node",
+        "An attacker running a single compromised relay"
+      ],
+      "correctIndex": 2,
+      "timeLimit": 35
+    },
+    {
+      "type": "multiple-choice",
+      "text": "What is the pseudo top-level domain used for Onion Services?",
+      "options": [
+        ".tor",
+        ".onion",
+        ".hidden",
+        ".dark"
+      ],
+      "correctIndex": 1,
+      "timeLimit": 20
+    },
+    {
+      "type": "multiple-choice",
+      "text": "For Onion Services, is HTTPS necessary for secure communication?",
+      "options": [
+        "Yes, HTTPS is always required for security",
+        "No, HTTP is sufficient because TOR encrypts the traffic",
+        "Only for Onion Services handling payments",
+        "Yes, because Exit Nodes can read HTTP traffic"
+      ],
+      "correctIndex": 1,
+      "timeLimit": 35
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Who performs DNS lookups in the TOR network?",
+      "options": [
+        "The client browser",
+        "The Entry Node",
+        "The Middle Node",
+        "The Exit Node"
+      ],
+      "correctIndex": 3,
+      "timeLimit": 30
+    },
+    {
+      "type": "multiple-choice",
+      "text": "How many Directory Authorities existed as of 2023?",
+      "options": [
+        "5",
+        "7",
+        "9",
+        "11"
+      ],
+      "correctIndex": 2,
+      "timeLimit": 25
+    },
+    {
+      "type": "multiple-choice",
+      "text": "What is a key difference between TOR and a VPN?",
+      "options": [
+        "TOR is centralized, VPN is decentralized",
+        "VPN is slower than TOR",
+        "VPN providers know the client's IP, TOR Exit Nodes do not",
+        "TOR requires subscription fees, VPNs are free"
+      ],
+      "correctIndex": 2,
+      "timeLimit": 35
+    },
+    {
+      "type": "multiple-choice",
+      "text": "What is an Exit Policy in TOR?",
+      "options": [
+        "A rule that determines which nodes can be entry guards",
+        "A configuration that defines which traffic a node will forward to the non-TOR internet",
+        "A security policy for TOR developers",
+        "A law enforcement requirement for exit node operators"
+      ],
+      "correctIndex": 1,
+      "timeLimit": 30
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Which of the following is a correct description of the TOR Browser's security levels?",
+      "options": [
+        "Standard / Secure / Maximum",
+        "Basic / Advanced / Expert",
+        "Standard / Safer / Safest",
+        "Low / Medium / High"
+      ],
+      "correctIndex": 2,
+      "timeLimit": 30
+    },
+    {
+      "type": "multiple-choice",
+      "text": "What is the main principle behind Onion Routing?",
+      "options": [
+        "Data is encrypted only at the transport layer",
+        "Data packets are encrypted multiple times, each node removes one layer",
+        "Data is split into small onion-shaped fragments",
+        "Each node re-encrypts the data before forwarding"
+      ],
+      "correctIndex": 1,
+      "timeLimit": 35
+    },
+    {
+      "type": "multiple-choice",
+      "text": "What is the role of Introduction Points in Onion Services?",
+      "options": [
+        "They encrypt the data between client and server",
+        "They act as intermediaries for connection requests to the Onion Service",
+        "They validate the consensus document",
+        "They block malicious connections to Onion Services"
+      ],
+      "correctIndex": 1,
+      "timeLimit": 35
+    },
+    {
+      "type": "estimation",
+      "text": "Estimate the minimum bandwidth (in KB/s) required for a TOR node to be classified as 'fast'.",
+      "correctAnswer": 100,
+      "timeLimit": 30
+    }
+  ]
+}
