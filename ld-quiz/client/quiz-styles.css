@@ -156,9 +156,20 @@
   border: 1px solid var(--quiz-border);
   border-radius: var(--quiz-radius);
   background: var(--quiz-surface);
-  cursor: default;
+  cursor: pointer;
   text-align: left;
-  transition: background 0.15s;
+  transition: all 0.15s;
+  user-select: none;
+}
+
+.quiz-option:hover {
+  background: var(--quiz-border);
+}
+
+.quiz-option.selected {
+  background: rgba(37, 99, 235, 0.1);
+  border-color: var(--quiz-primary);
+  font-weight: 500;
 }
 
 .quiz-option.correct {

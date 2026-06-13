@@ -42,13 +42,13 @@ describe('Math Renderer', () => {
       type: 'multiple-choice',
       text: 'What is \\( 2 + 2 \\)?',
       options: ['\\( 3 \\)', '\\( 4 \\)', '\\( 5 \\)'],
-      correctIndex: 1
+      correctIndices: [1]
     };
     const result = renderQuestion(question);
     assert.ok(result.text.includes('class="katex"'));
     assert.ok(result.options[0].includes('class="katex"'));
     assert.ok(result.options[1].includes('class="katex"'));
-    assert.strictEqual(result.correctIndex, 1);
+    assert.deepStrictEqual(result.correctIndices, [1]);
   });
 
   it('renderQuiz renders math in all questions', () => {
@@ -59,7 +59,7 @@ describe('Math Renderer', () => {
           type: 'multiple-choice',
           text: 'What is \\( x^2 \\)?',
           options: ['\\( 2x \\)', '\\( x \\)', '\\( x^2 \\)'],
-          correctIndex: 0
+          correctIndices: [0]
         },
         {
           type: 'estimation',
@@ -73,7 +73,7 @@ describe('Math Renderer', () => {
     assert.ok(result.questions[0].text.includes('class="katex"'));
     assert.ok(result.questions[1].text.includes('class="katex"'));
     assert.ok(result.questions[0].options[0].includes('class="katex"'));
-    assert.strictEqual(result.questions[0].correctIndex, 0);
+    assert.deepStrictEqual(result.questions[0].correctIndices, [0]);
     assert.strictEqual(result.questions[1].correctAnswer, 1.41);
   });
 

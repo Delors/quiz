@@ -305,13 +305,18 @@ class QuizControl {
 
     const answersHtml = msg.answers
       .map(
-        (a) => `
+        (a) => {
+          const answerValue = Array.isArray(a.answer)
+            ? a.answer.map(i => `Opt ${i + 1}`).join(", ")
+            : a.answer;
+          return `
       <div class="answer-item">
         <span class="answer-name">${this.escapeHtml(a.name)}</span>
-        <span class="answer-value">${a.answer}</span>
+        <span class="answer-value">${answerValue}</span>
         <span class="answer-points ${a.points > 0 ? "positive" : ""}">${a.points} pts</span>
       </div>
-    `,
+    `;
+        },
       )
       .join("");
 

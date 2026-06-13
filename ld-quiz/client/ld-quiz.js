@@ -235,10 +235,12 @@ class QuizHost extends HTMLElement {
     }
 
     let optionsHtml = '';
+    let submitHtml = '';
     if (question.type === 'multiple-choice' && question.options) {
-      optionsHtml = `<div class="quiz-options">
+      optionsHtml = `<div class="quiz-options" id="quiz-options">
         ${question.options.map((opt, i) => `<div class="quiz-option" data-index="${i}">${opt}</div>`).join('')}
       </div>`;
+      submitHtml = `<button class="quiz-btn quiz-btn-primary" id="quiz-submit-btn" style="margin-top:1rem;width:100%">Submit</button>`;
     }
 
     this.contentEl.innerHTML = `
@@ -247,8 +249,31 @@ class QuizHost extends HTMLElement {
         ${timerHtml}
         <div class="quiz-question-text" id="question-text">${question.text}</div>
         ${optionsHtml}
+        ${submitHtml}
       </div>
     `;
+
+    if (question.type === 'multiple-choice' && question.options) {
+      const selected = new Set();
+      const optionsEl = this.shadowRoot.getElementById('quiz-options');
+      const submitBtn = this.shadowRoot.getElementById('quiz-submit-btn');
+      optionsEl.querySelectorAll('.quiz-option').forEach(opt => {
+        opt.addEventListener('click', () => {
+          const idx = parseInt(opt.dataset.index);
+          if (selected.has(idx)) {
+            selected.delete(idx);
+            opt.classList.remove('selected');
+          } else {
+            selected.add(idx);
+            opt.classList.add('selected');
+          }
+        });
+      });
+      submitBtn.addEventListener('click', () => {
+        const answer = Array.from(selected).sort((a, b) => a - b);
+        this.ws.send(JSON.stringify({ type: 'submit_answer', answer }));
+      });
+    }
 
     if (timeLimit > 0) {
       let remaining = timeLimit;

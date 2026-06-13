@@ -71,7 +71,7 @@ Create a JSON file with your quiz questions:
         "\\( x \\)",
         "\\( x^2 \\)"
       ],
-      "correctIndex": 0,
+      "correctIndices": [0],
       "timeLimit": 30
     },
     {
@@ -149,7 +149,7 @@ The client component automatically loads its CSS from the quiz server, so CORS i
       "type": "multiple-choice",
       "text": "Question text with optional \\( LaTeX \\) math",
       "options": ["Option A", "Option B", "Option C"],
-      "correctIndex": 0,
+      "correctIndices": [0],
       "timeLimit": 30
     },
     {
@@ -172,7 +172,7 @@ The client component automatically loads its CSS from the quiz server, so CORS i
 ## Quiz JSON Format
 - `text`: Question text (supports KaTeX math with `\(...\)` and `\[...\]` delimiters)
 - `options`: Array of strings (for multiple-choice)
-- `correctIndex`: Zero-based index of correct option (for multiple-choice)
+- `correctIndices`: Array of zero-based indices of correct options (for multiple-choice). Single-answer questions use a one-element array, e.g. `[0]`. Multi-select questions use multiple indices, e.g. `[0, 2]`.
 - `correctAnswer`: Numeric value (for estimation)
 - `timeLimit`: Optional countdown timer in seconds
 

@@ -137,7 +137,7 @@ describe('Server Integration', () => {
 
   it('/api/sessions returns sessions for known token', async () => {
     const token = 'test-token-123';
-    const quiz = { title: 'Test Quiz', questions: [{ type: 'multiple-choice', text: 'Q1', options: ['A', 'B'], correctIndex: 0 }] };
+    const quiz = { title: 'Test Quiz', questions: [{ type: 'multiple-choice', text: 'Q1', options: ['A', 'B'], correctIndices: [0] }] };
     roomManager.createRoom(token, quiz);
     
     const res = await fetch(`http://127.0.0.1:${port}/api/sessions?token=${token}`);
@@ -164,7 +164,7 @@ describe('Server Integration', () => {
       ws.on('error', reject);
     });
     
-    const quiz = { title: 'WS Quiz', questions: [{ type: 'multiple-choice', text: 'Q1', options: ['A', 'B'], correctIndex: 0 }] };
+    const quiz = { title: 'WS Quiz', questions: [{ type: 'multiple-choice', text: 'Q1', options: ['A', 'B'], correctIndices: [0] }] };
     ws.send(JSON.stringify({ type: 'create_room', presenterToken: 'ws-token', quiz }));
     
     const msg = await new Promise((resolve, reject) => {
@@ -208,7 +208,7 @@ describe('Server Integration', () => {
       presenterWs.on('error', reject);
     });
     
-    const quiz = { title: 'Join Test', questions: [{ type: 'multiple-choice', text: 'Q1', options: ['A', 'B'], correctIndex: 0 }] };
+    const quiz = { title: 'Join Test', questions: [{ type: 'multiple-choice', text: 'Q1', options: ['A', 'B'], correctIndices: [0] }] };
     presenterWs.send(JSON.stringify({ type: 'create_room', presenterToken: 'join-test-token', quiz }));
     
     const roomMsg = await new Promise((resolve, reject) => {

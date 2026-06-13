@@ -9,7 +9,7 @@
         "\\( x \\)",
         "\\( x^2 \\)"
       ],
-      "correctIndex": 0,
+      "correctIndices": [0],
       "timeLimit": 30
     },
     {
@@ -26,7 +26,7 @@
         "\\( x + C \\)",
         "\\( \\frac{1}{x^2} + C \\)"
       ],
-      "correctIndex": 0,
+      "correctIndices": [0],
       "timeLimit": 30
     }
   ]

@@ -10,7 +10,9 @@
         "The Open Network",
         "The Obfuscated Route"
       ],
-      "correctIndex": 0,
+      "correctIndices": [
+        0
+      ],
       "timeLimit": 20
     },
     {
@@ -22,7 +24,9 @@
         "2004",
         "2005"
       ],
-      "correctIndex": 2,
+      "correctIndices": [
+        2
+      ],
       "timeLimit": 25
     },
     {
@@ -34,7 +38,9 @@
         "A dedicated physical network",
         "A satellite network"
       ],
-      "correctIndex": 1,
+      "correctIndices": [
+        1
+      ],
       "timeLimit": 25
     },
     {
@@ -46,7 +52,9 @@
         "Dark Web",
         "Clear Web"
       ],
-      "correctIndex": 2,
+      "correctIndices": [
+        2
+      ],
       "timeLimit": 25
     },
     {
@@ -58,7 +66,9 @@
         "3",
         "5"
       ],
-      "correctIndex": 2,
+      "correctIndices": [
+        2
+      ],
       "timeLimit": 20
     },
     {
@@ -70,7 +80,9 @@
         "Only the IP of the client",
         "Neither the client nor the destination IP"
       ],
-      "correctIndex": 2,
+      "correctIndices": [
+        2
+      ],
       "timeLimit": 30
     },
     {
@@ -82,7 +94,9 @@
         "Only the IP of the destination",
         "Neither the client nor the destination IP"
       ],
-      "correctIndex": 2,
+      "correctIndices": [
+        2
+      ],
       "timeLimit": 30
     },
     {
@@ -94,7 +108,9 @@
         "To handle exit traffic",
         "To store the consensus document"
       ],
-      "correctIndex": 1,
+      "correctIndices": [
+        1
+      ],
       "timeLimit": 30
     },
     {
@@ -106,7 +122,9 @@
         "1024 bytes",
         "1500 bytes"
       ],
-      "correctIndex": 1,
+      "correctIndices": [
+        1
+      ],
       "timeLimit": 25
     },
     {
@@ -118,7 +136,9 @@
         "An attacker controlling both the Entry Guard and Exit Node",
         "An attacker running a single compromised relay"
       ],
-      "correctIndex": 2,
+      "correctIndices": [
+        2
+      ],
       "timeLimit": 35
     },
     {
@@ -130,7 +150,9 @@
         ".hidden",
         ".dark"
       ],
-      "correctIndex": 1,
+      "correctIndices": [
+        1
+      ],
       "timeLimit": 20
     },
     {
@@ -142,7 +164,9 @@
         "Only for Onion Services handling payments",
         "Yes, because Exit Nodes can read HTTP traffic"
       ],
-      "correctIndex": 1,
+      "correctIndices": [
+        1
+      ],
       "timeLimit": 35
     },
     {
@@ -154,7 +178,9 @@
         "The Middle Node",
         "The Exit Node"
       ],
-      "correctIndex": 3,
+      "correctIndices": [
+        3
+      ],
       "timeLimit": 30
     },
     {
@@ -166,7 +192,9 @@
         "9",
         "11"
       ],
-      "correctIndex": 2,
+      "correctIndices": [
+        2
+      ],
       "timeLimit": 25
     },
     {
@@ -178,7 +206,9 @@
         "VPN providers know the client's IP, TOR Exit Nodes do not",
         "TOR requires subscription fees, VPNs are free"
       ],
-      "correctIndex": 2,
+      "correctIndices": [
+        2
+      ],
       "timeLimit": 35
     },
     {
@@ -190,7 +220,9 @@
         "A security policy for TOR developers",
         "A law enforcement requirement for exit node operators"
       ],
-      "correctIndex": 1,
+      "correctIndices": [
+        1
+      ],
       "timeLimit": 30
     },
     {
@@ -202,7 +234,9 @@
         "Standard / Safer / Safest",
         "Low / Medium / High"
       ],
-      "correctIndex": 2,
+      "correctIndices": [
+        2
+      ],
       "timeLimit": 30
     },
     {
@@ -214,7 +248,9 @@
         "Data is split into small onion-shaped fragments",
         "Each node re-encrypts the data before forwarding"
       ],
-      "correctIndex": 1,
+      "correctIndices": [
+        1
+      ],
       "timeLimit": 35
     },
     {
@@ -226,7 +262,26 @@
         "They validate the consensus document",
         "They block malicious connections to Onion Services"
       ],
-      "correctIndex": 1,
+      "correctIndices": [
+        1
+      ],
+      "timeLimit": 35
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Which of the following are types of TOR nodes? (Select all that apply)",
+      "options": [
+        "Entry Node (Guard Node)",
+        "Middle Node",
+        "Exit Node",
+        "Bridge Node"
+      ],
+      "correctIndices": [
+        0,
+        1,
+        2,
+        3
+      ],
       "timeLimit": 35
     },
     {

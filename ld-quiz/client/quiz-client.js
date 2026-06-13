@@ -163,11 +163,12 @@ class QuizClient {
     let inputHtml = '';
     if (question.type === 'multiple-choice') {
       inputHtml = `
-        <div class="options">
+        <div class="options" id="options">
           ${question.options.map((opt, i) => `
-            <button class="option-btn" data-index="${i}">${opt}</button>
+            <div class="option-btn" data-index="${i}">${opt}</div>
           `).join('')}
         </div>
+        <button class="btn btn-primary" id="submit-btn" style="margin-top:1rem;width:100%">Submit</button>
       `;
     } else if (question.type === 'estimation') {
       inputHtml = `
@@ -203,11 +204,24 @@ class QuizClient {
     }
 
     if (question.type === 'multiple-choice') {
-      document.querySelectorAll('.option-btn').forEach(btn => {
+      const selected = new Set();
+      const optionsEl = document.getElementById('options');
+      const submitBtn = document.getElementById('submit-btn');
+      optionsEl.querySelectorAll('.option-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-          const index = parseInt(btn.dataset.index);
-          this.submitAnswer(index);
+          const idx = parseInt(btn.dataset.index);
+          if (selected.has(idx)) {
+            selected.delete(idx);
+            btn.classList.remove('selected');
+          } else {
+            selected.add(idx);
+            btn.classList.add('selected');
+          }
         });
+      });
+      submitBtn.addEventListener('click', () => {
+        const answer = Array.from(selected).sort((a, b) => a - b);
+        this.submitAnswer(answer);
       });
     } else if (question.type === 'estimation') {
       document.getElementById('answer-form').addEventListener('submit', (e) => {

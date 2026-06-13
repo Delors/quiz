@@ -35,7 +35,7 @@ describe('Room', () => {
   });
 
   it('startGame initializes the first question', () => {
-    const quiz = { title: 'Test', questions: [{ type: 'multiple-choice', text: 'Q1', options: ['A', 'B'], correctIndex: 0 }] };
+    const quiz = { title: 'Test', questions: [{ type: 'multiple-choice', text: 'Q1', options: ['A', 'B'], correctIndices: [0] }] };
     const room = new Room('ABC123', 'token', quiz);
     room.startGame();
     assert.strictEqual(room.state, 'question');
@@ -52,27 +52,27 @@ describe('Room', () => {
   });
 
   it('submitAnswer accepts only during question state', () => {
-    const quiz = { title: 'Test', questions: [{ type: 'multiple-choice', text: 'Q1', options: ['A', 'B'], correctIndex: 0 }] };
+    const quiz = { title: 'Test', questions: [{ type: 'multiple-choice', text: 'Q1', options: ['A', 'B'], correctIndices: [0] }] };
     const room = new Room('ABC123', 'token', quiz);
     const mockWs = { readyState: 1 };
     const p = room.addParticipant(mockWs, 'Alice');
-    
+
     // Before game starts
-    assert.strictEqual(room.submitAnswer(p.id, 0), false);
-    
+    assert.strictEqual(room.submitAnswer(p.id, [0]), false);
+
     room.startGame();
-    assert.strictEqual(room.submitAnswer(p.id, 0), true);
-    
+    assert.strictEqual(room.submitAnswer(p.id, [0]), true);
+
     // Duplicate answer
-    assert.strictEqual(room.submitAnswer(p.id, 0), false);
-    
+    assert.strictEqual(room.submitAnswer(p.id, [0]), false);
+
     // After question ends
     room.endQuestion();
-    assert.strictEqual(room.submitAnswer(p.id, 0), false);
+    assert.strictEqual(room.submitAnswer(p.id, [0]), false);
   });
 
   it('submitAnswer auto-ends when all participants answered', () => {
-    const quiz = { title: 'Test', questions: [{ type: 'multiple-choice', text: 'Q1', options: ['A', 'B'], correctIndex: 0 }] };
+    const quiz = { title: 'Test', questions: [{ type: 'multiple-choice', text: 'Q1', options: ['A', 'B'], correctIndices: [0] }] };
     const room = new Room('ABC123', 'token', quiz);
     let autoEndCalled = false;
     room.onAutoEnd = (results) => {
@@ -84,15 +84,15 @@ describe('Room', () => {
     const p2 = room.addParticipant(ws2, 'Bob');
 
     room.startGame();
-    room.submitAnswer(p1.id, 0);
+    room.submitAnswer(p1.id, [0]);
     assert.strictEqual(room.state, 'question');
-    room.submitAnswer(p2.id, 1);
+    room.submitAnswer(p2.id, [1]);
     assert.strictEqual(room.state, 'results');
     assert.strictEqual(autoEndCalled, true);
   });
 
   it('time limit auto-ends question', async () => {
-    const quiz = { title: 'Test', questions: [{ type: 'multiple-choice', text: 'Q1', options: ['A', 'B'], correctIndex: 0, timeLimit: 0.05 }] };
+    const quiz = { title: 'Test', questions: [{ type: 'multiple-choice', text: 'Q1', options: ['A', 'B'], correctIndices: [0], timeLimit: 0.05 }] };
     const room = new Room('ABC123', 'token', quiz);
     let autoEndCalled = false;
     room.onAutoEnd = (results) => {
@@ -108,13 +108,13 @@ describe('Room', () => {
   });
 
   it('endQuestion is idempotent', () => {
-    const quiz = { title: 'Test', questions: [{ type: 'multiple-choice', text: 'Q1', options: ['A', 'B'], correctIndex: 0 }] };
+    const quiz = { title: 'Test', questions: [{ type: 'multiple-choice', text: 'Q1', options: ['A', 'B'], correctIndices: [0] }] };
     const room = new Room('ABC123', 'token', quiz);
     const ws1 = { readyState: 1 };
     const p1 = room.addParticipant(ws1, 'Alice');
 
     room.startGame();
-    room.submitAnswer(p1.id, 0);
+    room.submitAnswer(p1.id, [0]);
     const results1 = room.endQuestion();
     const results2 = room.endQuestion();
     assert.strictEqual(results1.scores.get(p1.id), 100);
@@ -124,17 +124,17 @@ describe('Room', () => {
   });
 
   it('scoreQuestion multiple-choice: correct gets 100, wrong gets 0', () => {
-    const quiz = { title: 'Test', questions: [{ type: 'multiple-choice', text: 'Q1', options: ['A', 'B'], correctIndex: 0 }] };
+    const quiz = { title: 'Test', questions: [{ type: 'multiple-choice', text: 'Q1', options: ['A', 'B'], correctIndices: [0] }] };
     const room = new Room('ABC123', 'token', quiz);
     const ws1 = { readyState: 1 };
     const ws2 = { readyState: 1 };
     const p1 = room.addParticipant(ws1, 'Alice');
     const p2 = room.addParticipant(ws2, 'Bob');
-    
+
     room.startGame();
-    room.submitAnswer(p1.id, 0); // correct
-    room.submitAnswer(p2.id, 1); // wrong
-    
+    room.submitAnswer(p1.id, [0]); // correct
+    room.submitAnswer(p2.id, [1]); // wrong
+
     const results = room.endQuestion();
     assert.strictEqual(results.scores.get(p1.id), 100);
     assert.strictEqual(results.scores.get(p2.id), 0);
@@ -189,8 +189,8 @@ describe('Room', () => {
 
   it('nextQuestion advances the game', () => {
     const quiz = { title: 'Test', questions: [
-      { type: 'multiple-choice', text: 'Q1', options: ['A', 'B'], correctIndex: 0 },
-      { type: 'multiple-choice', text: 'Q2', options: ['A', 'B'], correctIndex: 0 }
+      { type: 'multiple-choice', text: 'Q1', options: ['A', 'B'], correctIndices: [0] },
+      { type: 'multiple-choice', text: 'Q2', options: ['A', 'B'], correctIndices: [0] }
     ] };
     const room = new Room('ABC123', 'token', quiz);
     room.startGame();
@@ -221,7 +221,7 @@ describe('Room', () => {
 
   it('getPublicQuestion strips correct answer', () => {
     const quiz = { title: 'Test', questions: [
-      { type: 'multiple-choice', text: 'Q1', options: ['A', 'B'], correctIndex: 0, correctAnswer: 42, timeLimit: 30 }
+      { type: 'multiple-choice', text: 'Q1', options: ['A', 'B'], correctIndices: [0], correctAnswer: 42, timeLimit: 30 }
     ] };
     const room = new Room('ABC123', 'token', quiz);
     room.startGame();
@@ -230,7 +230,7 @@ describe('Room', () => {
     assert.strictEqual(pub.type, 'multiple-choice');
     assert.deepStrictEqual(pub.options, ['A', 'B']);
     assert.strictEqual(pub.timeLimit, 30);
-    assert.strictEqual(pub.correctIndex, undefined);
+    assert.strictEqual(pub.correctIndices, undefined);
     assert.strictEqual(pub.correctAnswer, undefined);
   });
 
@@ -321,6 +321,31 @@ describe('Room', () => {
     assert.strictEqual(summary.participantCount, 1);
     assert.strictEqual(summary.totalQuestions, 3);
     assert.ok(summary.createdAt);
+  });
+
+  it('scoreQuestion multi-select: exact match gets 100, partial or wrong gets 0', () => {
+    const quiz = { title: 'Test', questions: [{ type: 'multiple-choice', text: 'Q1', options: ['A', 'B', 'C', 'D'], correctIndices: [0, 2] }] };
+    const room = new Room('ABC123', 'token', quiz);
+    const ws1 = { readyState: 1 };
+    const ws2 = { readyState: 1 };
+    const ws3 = { readyState: 1 };
+    const ws4 = { readyState: 1 };
+    const p1 = room.addParticipant(ws1, 'Alice');
+    const p2 = room.addParticipant(ws2, 'Bob');
+    const p3 = room.addParticipant(ws3, 'Charlie');
+    const p4 = room.addParticipant(ws4, 'Diana');
+
+    room.startGame();
+    room.submitAnswer(p1.id, [0, 2]); // exact match
+    room.submitAnswer(p2.id, [0, 1]); // partial (one wrong)
+    room.submitAnswer(p3.id, [1, 3]); // completely wrong
+    room.submitAnswer(p4.id, []); // empty
+
+    const results = room.endQuestion();
+    assert.strictEqual(results.scores.get(p1.id), 100);
+    assert.strictEqual(results.scores.get(p2.id), 0);
+    assert.strictEqual(results.scores.get(p3.id), 0);
+    assert.strictEqual(results.scores.get(p4.id), 0);
   });
 });
 

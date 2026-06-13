@@ -141,8 +141,15 @@ class Room {
     const rankings = [];
 
     if (question.type === 'multiple-choice') {
+      const correctSorted = [...question.correctIndices].sort((a, b) => a - b);
       for (const [participantId, data] of this.currentAnswers) {
-        const points = data.answer === question.correctIndex ? 100 : 0;
+        let points = 0;
+        if (Array.isArray(data.answer)) {
+          const answerSorted = [...data.answer].sort((a, b) => a - b);
+          const isCorrect = answerSorted.length === correctSorted.length &&
+            answerSorted.every((val, idx) => val === correctSorted[idx]);
+          points = isCorrect ? 100 : 0;
+        }
         scores.set(participantId, points);
         rankings.push({ participantId, points, timestamp: data.timestamp });
       }
@@ -207,7 +214,9 @@ class Room {
     const q = this.getCurrentQuestion();
     if (!q) return null;
     // Return question without correct answer
+    const { correctIndices: _, correctIndex: __, correctAnswer: ___, ...publicQ } = q;
     return {
+      ...publicQ,
       type: q.type,
       text: q.text,
       options: q.options || undefined,
