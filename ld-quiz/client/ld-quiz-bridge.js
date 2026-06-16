@@ -16,7 +16,8 @@ const convertModuleBasedSpecificationToLDQuizElement = async () => {
       }
 
       const quizElement = document.createElement("ld-quiz");
-      quizElement.setAttribute("encrypted-quiz", encryptedQuiz);
+      quizElement.setAttribute("encrypted", "");
+      quizElement.setAttribute("quiz", encryptedQuiz);
 
       // Optional: read server-url from module attributes
       const serverUrl = moduleElement.getAttribute("server-url");

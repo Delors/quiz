@@ -111,7 +111,7 @@ The `<ld-quiz>` component supports both **encrypted** and **unencrypted** quizze
 Add the `encrypted` attribute and provide the encrypted quiz data:
 
 ```html
-<ld-quiz encrypted encrypted-quiz="MTAwMDAw:abc123...encrypted-data..." server-url="https://quiz.example.com"></ld-quiz>
+<ld-quiz encrypted quiz="MTAwMDAw:abc123...encrypted-data..." server-url="https://quiz.example.com"></ld-quiz>
 <script type="module" src="https://quiz.example.com/client/ld-quiz.js"></script>
 ```
 
@@ -217,9 +217,8 @@ pm2 reload quiz-server # Zero-downtime reload
 
 | Attribute | Required | Description |
 |-----------|----------|-------------|
-| `encrypted` | No | Presence attribute. If set, the quiz requires password decryption |
-| `encrypted-quiz` | Yes (if encrypted) | The encrypted quiz ciphertext string |
-| `quiz` | Yes (if not encrypted) | Inline JSON string of the quiz (alternative to file upload) |
+| `encrypted` | No | Presence attribute. If set, the `quiz` value is treated as encrypted ciphertext |
+| `quiz` | Yes | The quiz data: encrypted ciphertext (when `encrypted` is present) or inline JSON string |
 | `server-url` | No | The quiz server URL. Defaults to `window.location.origin` |
 
 ## Quiz JSON Format

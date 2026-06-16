@@ -2,6 +2,7 @@ import { decryptAESGCMPBKDF } from '../shared/ld-crypto.js';
 import QRCode from './qrcode.min.js';
 
 const template = document.createElement('template');
+const MAX_QUIZ_SIZE = 1024 * 1024; // 1MB
 
 async function loadStyles(serverUrl) {
   // Load CSS from the quiz server if specified, otherwise from the script's base URL
@@ -38,7 +39,7 @@ class QuizHost extends HTMLElement {
   }
 
   async connectedCallback() {
-    const encryptedQuiz = this.getAttribute('encrypted-quiz');
+    const encryptedQuiz = this.getAttribute('quiz');
     const quizAttr = this.getAttribute('quiz');
     const isEncrypted = this.hasAttribute('encrypted');
     this.serverUrl = this.getAttribute('server-url') || window.location.origin;
@@ -214,11 +215,18 @@ class QuizHost extends HTMLElement {
 
     this.ws.onopen = () => {
       this.reconnectAttempts = 0;
-      this.ws.send(JSON.stringify({
+      const payload = JSON.stringify({
         type: 'create_room',
         presenterToken: this.presenterToken,
         quiz: this.quiz
-      }));
+      });
+      const payloadSize = new TextEncoder().encode(payload).length;
+      if (payloadSize > MAX_QUIZ_SIZE) {
+        this.showError('Quiz data exceeds maximum size of 1MB');
+        this.ws.close();
+        return;
+      }
+      this.ws.send(payload);
     };
 
     this.ws.onmessage = (event) => {
@@ -242,6 +250,10 @@ class QuizHost extends HTMLElement {
 
   handleMessage(msg) {
     switch (msg.type) {
+      case 'error':
+        this.showError(msg.message || 'An error occurred');
+        break;
+
       case 'room_created':
         this.roomId = msg.roomId;
         this.renderLobby();

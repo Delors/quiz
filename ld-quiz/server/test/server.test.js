@@ -18,6 +18,7 @@ describe('Server Integration', () => {
 
   before(async () => {
     const app = express();
+    const MAX_QUIZ_SIZE = 1024 * 1024; // 1MB
     roomManager = new RoomManager();
     
     // CORS middleware
@@ -49,12 +50,18 @@ describe('Server Integration', () => {
     });
     
     server = createServer(app);
-    wss = new WebSocketServer({ server });
+    wss = new WebSocketServer({ server, maxPayload: MAX_QUIZ_SIZE });
     
     // Simple echo handler for testing
     wss.on('connection', (ws) => {
+      ws.on('error', () => {});
       ws.on('message', (data) => {
         try {
+          const dataSize = Buffer.byteLength(data);
+          if (dataSize > MAX_QUIZ_SIZE) {
+            ws.send(JSON.stringify({ type: 'error', message: 'Quiz data exceeds maximum size of 1MB' }));
+            return;
+          }
           const msg = JSON.parse(data);
           if (msg.type === 'create_room') {
             const room = roomManager.createRoom(msg.presenterToken, msg.quiz);
@@ -178,6 +185,33 @@ describe('Server Integration', () => {
     assert.strictEqual(msg.totalQuestions, 1);
     
     ws.close();
+  });
+
+  it('WebSocket rejects oversized create_room payload', async () => {
+    const ws = new WebSocket(`ws://127.0.0.1:${port}`);
+    await new Promise((resolve, reject) => {
+      ws.on('open', resolve);
+      ws.on('error', reject);
+    });
+    
+    const bigQuestion = { type: 'multiple-choice', text: 'x'.repeat(2 * 1024 * 1024), options: ['A', 'B'], correctIndices: [0] };
+    const quiz = { title: 'Oversized', questions: [bigQuestion] };
+    ws.send(JSON.stringify({ type: 'create_room', presenterToken: 'oversized-token', quiz }));
+    
+    const result = await new Promise((resolve) => {
+      ws.on('message', (data) => resolve({ kind: 'message', msg: JSON.parse(data) }));
+      ws.on('close', () => resolve({ kind: 'close' }));
+      setTimeout(() => resolve({ kind: 'timeout' }), 2000);
+    });
+    
+    ws.close();
+    ws.terminate();
+    
+    if (result.kind === 'message') {
+      assert.strictEqual(result.msg.type, 'error');
+      assert.ok(result.msg.message.includes('1MB'));
+    }
+    assert.notStrictEqual(result.kind, 'timeout', 'Oversized payload should be rejected');
   });
 
   it('WebSocket join_room returns error for nonexistent room', async () => {

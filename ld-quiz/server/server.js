@@ -10,7 +10,8 @@ import { validateName } from './name-validator.js';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 const server = createServer(app);
-const wss = new WebSocketServer({ server });
+const MAX_QUIZ_SIZE = 1024 * 1024; // 1MB
+const wss = new WebSocketServer({ server, maxPayload: MAX_QUIZ_SIZE });
 const roomManager = new RoomManager();
 
 // CORS configuration
@@ -54,6 +55,13 @@ wss.on('connection', (ws) => {
   ws.isAlive = true;
   ws.on('pong', () => { ws.isAlive = true; });
   ws.on('close', () => handleDisconnect(ws));
+  ws.on('error', (err) => {
+    if (err.message?.includes('Payload')) {
+      console.warn('WebSocket payload too large');
+      return;
+    }
+    console.error('WebSocket error:', err);
+  });
   ws.on('message', (data) => handleMessage(ws, data));
 });
 
@@ -70,6 +78,12 @@ const interval = setInterval(() => {
 }, 30000);
 
 function handleMessage(ws, data) {
+  const dataSize = Buffer.byteLength(data);
+  if (dataSize > MAX_QUIZ_SIZE) {
+    ws.send(JSON.stringify({ type: 'error', message: 'Quiz data exceeds maximum size of 1MB' }));
+    return;
+  }
+
   try {
     const msg = JSON.parse(data);
     
