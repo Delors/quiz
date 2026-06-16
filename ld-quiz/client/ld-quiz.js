@@ -39,6 +39,8 @@ class QuizHost extends HTMLElement {
 
   async connectedCallback() {
     const encryptedQuiz = this.getAttribute('encrypted-quiz');
+    const quizAttr = this.getAttribute('quiz');
+    const isEncrypted = this.hasAttribute('encrypted');
     this.serverUrl = this.getAttribute('server-url') || window.location.origin;
 
     const [css, katexCss] = await Promise.all([
@@ -49,13 +51,27 @@ class QuizHost extends HTMLElement {
     this.shadowRoot.appendChild(template.content.cloneNode(true));
     this.contentEl = this.shadowRoot.getElementById('content');
 
-    if (!encryptedQuiz) {
-      this.showError('No encrypted quiz provided');
-      return;
+    if (isEncrypted) {
+      // Encrypted quiz: password login
+      if (!encryptedQuiz) {
+        this.showError('No encrypted quiz provided');
+        return;
+      }
+      this.encryptedQuiz = encryptedQuiz;
+      this.renderLogin();
+    } else if (quizAttr) {
+      // Unencrypted inline quiz
+      try {
+        this.quiz = JSON.parse(quizAttr);
+        this.presenterToken = await this.hashQuiz(this.quiz);
+        this.renderQuizPreview();
+      } catch (e) {
+        this.showError('Invalid quiz JSON');
+      }
+    } else {
+      // Unencrypted file upload
+      this.renderFileUpload();
     }
-
-    this.encryptedQuiz = encryptedQuiz;
-    this.renderLogin();
   }
 
   disconnectedCallback() {
@@ -112,6 +128,84 @@ class QuizHost extends HTMLElement {
     const hashBuffer = await crypto.subtle.digest('SHA-256', data);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  async hashQuiz(quiz) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(JSON.stringify(quiz));
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  renderQuizPreview() {
+    this.currentState = 'preview';
+    this.contentEl.innerHTML = `
+      <div class="quiz-preview">
+        <h2 class="quiz-title">${this.escapeHtml(this.quiz.title || 'Quiz')}</h2>
+        <div class="quiz-meta">${this.quiz.questions.length} questions</div>
+        <button class="quiz-btn quiz-btn-primary" id="btn-start">Start Quiz</button>
+      </div>
+    `;
+
+    const btnStart = this.shadowRoot.getElementById('btn-start');
+    btnStart.addEventListener('click', () => {
+      this.connectWebSocket();
+    });
+  }
+
+  renderFileUpload() {
+    this.currentState = 'upload';
+    this.contentEl.innerHTML = `
+      <div class="quiz-upload">
+        <h2 class="quiz-title">Upload Quiz</h2>
+        <p class="quiz-info">Select a JSON quiz file to upload</p>
+        <label class="quiz-file-label">
+          <input type="file" class="quiz-file-input" id="quiz-file" accept=".json">
+          <span class="quiz-file-btn">Choose File</span>
+        </label>
+        <div id="quiz-file-name" class="quiz-file-name"></div>
+        <div id="quiz-preview" class="quiz-preview-container" style="display:none"></div>
+        <div id="error" class="quiz-error" style="display:none"></div>
+      </div>
+    `;
+
+    const fileInput = this.shadowRoot.getElementById('quiz-file');
+    const fileName = this.shadowRoot.getElementById('quiz-file-name');
+    const previewContainer = this.shadowRoot.getElementById('quiz-preview');
+    const errorEl = this.shadowRoot.getElementById('error');
+
+    fileInput.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      errorEl.style.display = 'none';
+      fileName.textContent = file.name;
+
+      try {
+        const text = await file.text();
+        const quiz = JSON.parse(text);
+        this.quiz = quiz;
+        this.presenterToken = await this.hashQuiz(quiz);
+
+        // Show preview
+        previewContainer.style.display = 'block';
+        previewContainer.innerHTML = `
+          <h3 class="quiz-title">${this.escapeHtml(quiz.title || 'Quiz')}</h3>
+          <div class="quiz-meta">${quiz.questions.length} questions</div>
+          <button class="quiz-btn quiz-btn-primary" id="btn-start-upload">Start Quiz</button>
+        `;
+
+        const btnStart = this.shadowRoot.getElementById('btn-start-upload');
+        btnStart.addEventListener('click', () => {
+          this.connectWebSocket();
+        });
+      } catch (err) {
+        errorEl.textContent = 'Invalid JSON file';
+        errorEl.style.display = 'block';
+        previewContainer.style.display = 'none';
+      }
+    });
   }
 
   connectWebSocket() {

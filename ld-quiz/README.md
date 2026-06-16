@@ -104,20 +104,38 @@ For production, see [Production Deployment](#6-production-deployment) below.
 
 ### 5. Embed the Quiz
 
-For **LectureDoc2** (in your `.rst` file):
+The `<ld-quiz>` component supports both **encrypted** and **unencrypted** quizzes.
+
+#### Encrypted Quiz (password required)
+
+Add the `encrypted` attribute and provide the encrypted quiz data:
 
 ```html
-<ld-module name="ld-quiz" server-url="https://quiz.example.com">
-MTAwMDAw:abc123...encrypted-data...
-</ld-module>
-```
-
-For **standalone HTML**:
-
-```html
-<ld-quiz encrypted-quiz="MTAwMDAw:abc123...encrypted-data..." server-url="https://quiz.example.com"></ld-quiz>
+<ld-quiz encrypted encrypted-quiz="MTAwMDAw:abc123...encrypted-data..." server-url="https://quiz.example.com"></ld-quiz>
 <script type="module" src="https://quiz.example.com/client/ld-quiz.js"></script>
 ```
+
+The presenter will be prompted for a password to decrypt the quiz.
+
+#### Unencrypted Quiz — Inline JSON
+
+Provide the quiz JSON directly via the `quiz` attribute:
+
+```html
+<ld-quiz quiz='{"title":"My Quiz","questions":[...]}' server-url="https://quiz.example.com"></ld-quiz>
+```
+
+The quiz title is shown with a "Start Quiz" button. No password is required.
+
+#### Unencrypted Quiz — File Upload
+
+If no `quiz` attribute is provided, a file picker is shown:
+
+```html
+<ld-quiz server-url="https://quiz.example.com"></ld-quiz>
+```
+
+The presenter selects a `.json` file, and the quiz title is shown with a "Start Quiz" button.
 
 > **Note:** The `server-url` attribute is required when the quiz server is hosted on a different domain than the slide set. If omitted, it defaults to the current page's origin.
 
@@ -199,7 +217,9 @@ pm2 reload quiz-server # Zero-downtime reload
 
 | Attribute | Required | Description |
 |-----------|----------|-------------|
-| `encrypted-quiz` | Yes | The encrypted quiz ciphertext string |
+| `encrypted` | No | Presence attribute. If set, the quiz requires password decryption |
+| `encrypted-quiz` | Yes (if encrypted) | The encrypted quiz ciphertext string |
+| `quiz` | Yes (if not encrypted) | Inline JSON string of the quiz (alternative to file upload) |
 | `server-url` | No | The quiz server URL. Defaults to `window.location.origin` |
 
 ## Quiz JSON Format
