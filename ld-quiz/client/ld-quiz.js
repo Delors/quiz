@@ -39,7 +39,6 @@ class QuizHost extends HTMLElement {
   }
 
   async connectedCallback() {
-    const encryptedQuiz = this.getAttribute('quiz');
     const quizAttr = this.getAttribute('quiz');
     const isEncrypted = this.hasAttribute('encrypted');
     this.serverUrl = this.getAttribute('server-url') || window.location.origin;
@@ -54,11 +53,11 @@ class QuizHost extends HTMLElement {
 
     if (isEncrypted) {
       // Encrypted quiz: password login
-      if (!encryptedQuiz) {
+      if (!quizAttr) {
         this.showError('No encrypted quiz provided');
         return;
       }
-      this.encryptedQuiz = encryptedQuiz;
+      this.encryptedQuiz = quizAttr;
       this.renderLogin();
     } else if (quizAttr) {
       // Unencrypted inline quiz
