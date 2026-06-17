@@ -311,22 +311,50 @@ tls /path/to/cert.pem /path/to/key.pem
 
 ### WebSocket Messages
 
+All messages are JSON objects with a `type` field.
+
 **Presenter → Server:**
 - `create_room`: Create a new quiz room
+  - `presenterToken`: SHA-256 hash of the quiz data or password
+  - `quiz`: The quiz object (rendered server-side)
 - `start_game`: Begin the quiz
 - `end_question`: End the current question and show results
-- `next_question`: Advance to the next question
-- `control_connect`: Connect to an existing room (for reconnection)
+- `next_question`: Advance to the next question or end the game
+- `control_connect`: Connect to a room as presenter
+  - With `roomId`: join the control channel for that room
+  - Without `roomId`: receive a `sessions_list` of all rooms for this presenter
 
 **Participant → Server:**
 - `join_room`: Join a room with a name
+  - `roomId`: Room to join
+  - `name`: Participant display name
 - `submit_answer`: Submit an answer
+  - `answer`: Selected option index, array of indices, or estimation value
 
-**Server → Client:**
-- `question`: New question available
-- `results`: Round results with leaderboard
-- `game_ended`: Final results
-- `participant_joined` / `participant_left`: Lobby updates
+**Server → Presenter (`ld-quiz` component):**
+- `room_created`: Room was created; includes `roomId`, `quizTitle`, `totalQuestions`
+- `participant_joined` / `participant_left`: Lobby participant count updates
+
+**Server → Control Window (`quiz-control.js`):**
+- `control_connected`: Initial state after connecting; includes `roomId`, `state`, `quizTitle`, `totalQuestions`, `currentQuestionIndex`, `question`, `participantCount`, `leaderboard`
+- `sessions_list`: List of active sessions when no `roomId` was provided
+- `game_started`: Quiz started; includes `questionIndex` and `question`
+- `question_started`: Next question is active; includes `questionIndex` and `question`
+- `question_results`: Question ended; includes `questionIndex`, `answers`, and `leaderboard`
+- `answer_count`: Live count of submitted answers during a question
+- `participant_joined` / `participant_left`: Participant count updates
+
+**Server → Participant (`quiz-client.js`):**
+- `joined`: Successfully joined; includes `participantId` and `quizTitle`
+- `question`: New question available; includes `questionIndex`, `totalQuestions`, `question`, `startTime`
+- `results`: Round results with `leaderboard`, `questionIndex`, and `waiting`
+- `game_ended`: Final results; includes `leaderboard`
+
+**Server → Broadcast:**
+- `game_ended`: Sent to all connected clients when the quiz ends
+
+**Server → Any Client:**
+- `error`: Error message from the server
 
 ## Development
 
