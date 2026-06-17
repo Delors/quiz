@@ -17,59 +17,54 @@
       "type": "multiple-choice",
       "text": "Wie bezeichnet man \\( \\mathbb{R}^n \\)?",
       "options": [
-        "Einen \\( n \\)-dimensionalen Vektorraum",
         "Eine \\( n \\times n \\)-Matrix",
         "Einen Skalarkörper",
         "Einen Einheitsvektor"
+        "Einen \\( n \\)-dimensionalen Vektorraum",
       ],
-      "correctIndices": [0],
+      "correctIndices": [3],
       "timeLimit": 20
     },
     {
       "type": "multiple-choice",
       "text": "Wie werden zwei Vektoren \\( \\vec{a}, \\vec{b} \\in \\mathbb{R}^n \\) addiert?",
       "options": [
-        "Komponentenweise",
         "Durch Multiplikation der Beträge",
         "Nur wenn sie orthogonal sind",
+        "Komponentenweise",
         "Nicht definiert"
       ],
-      "correctIndices": [0],
+      "correctIndices": [2],
       "timeLimit": 20
     },
     {
       "type": "multiple-choice",
       "text": "Wie lautet das Skalarprodukt \\( \\vec{a}^T \\cdot \\vec{b} \\)?",
       "options": [
-        "\\( \\sum_{i=1}^{n} a_i \\cdot b_i \\)",
         "\\( \\sum_{i=1}^{n} a_i + b_i \\)",
+        "\\( \\sum_{i=1}^{n} a_i \\cdot b_i \\)",
         "\\( \\sum_{i=1}^{n} a_i / b_i \\)",
         "\\( \\prod_{i=1}^{n} a_i \\cdot b_i \\)"
       ],
-      "correctIndices": [0],
+      "correctIndices": [1],
       "timeLimit": 25
     },
     {
       "type": "multiple-choice",
       "text": "Wann heißen Vektoren \\( \\vec{a}_1, \\ldots, \\vec{a}_n \\) linear unabhängig?",
       "options": [
-        "Wenn aus \\( \\sum \\lambda_i \\vec{a}_i = \\vec{0} \\) folgt, dass alle \\( \\lambda_i = 0 \\) sind",
         "Wenn ihre Summe der Nullvektor ist",
         "Wenn sie paarweise orthogonal sind",
+        "Wenn aus \\( \\sum \\lambda_i \\vec{a}_i = \\vec{0} \\) folgt, dass alle \\( \\lambda_i = 0 \\) sind",
         "Wenn sie alle die gleiche Länge haben"
       ],
-      "correctIndices": [0],
+      "correctIndices": [2],
       "timeLimit": 30
     },
     {
       "type": "multiple-choice",
       "text": "In einem \\( n \\)-dimensionalen Vektorraum sind \\( n+1 \\) Vektoren stets ...",
-      "options": [
-        "linear abhängig",
-        "linear unabhängig",
-        "orthogonal",
-        "normiert"
-      ],
+      "options": ["linear abhängig", "linear unabhängig", "orthogonal", "normiert"],
       "correctIndices": [0],
       "timeLimit": 20
     },
@@ -89,48 +84,48 @@
       "type": "multiple-choice",
       "text": "Wann heißt eine Matrix quadratisch?",
       "options": [
-        "Wenn die Anzahl der Zeilen gleich der Anzahl der Spalten ist",
         "Wenn alle Elemente gleich sind",
         "Wenn die Determinante ungleich null ist",
+        "Wenn die Anzahl der Zeilen gleich der Anzahl der Spalten ist",
         "Wenn sie invertierbar ist"
       ],
-      "correctIndices": [0],
+      "correctIndices": [2],
       "timeLimit": 20
     },
     {
       "type": "multiple-choice",
       "text": "Welche Bedingung charakterisiert die Einheitsmatrix \\( E \\)?",
       "options": [
-        "\\( e_{ij} = 1 \\) für \\( i = j \\) und \\( e_{ij} = 0 \\) sonst",
         "Alle Elemente sind 1",
+        "\\( e_{ij} = 1 \\) für \\( i = j \\) und \\( e_{ij} = 0 \\) sonst",
         "Alle Elemente sind 0",
         "\\( e_{ij} = 0 \\) für \\( i = j \\) und \\( e_{ij} = 1 \\) sonst"
       ],
-      "correctIndices": [0],
+      "correctIndices": [1],
       "timeLimit": 25
     },
     {
       "type": "multiple-choice",
       "text": "Wie entsteht die transponierte Matrix \\( A^T \\)?",
       "options": [
-        "Durch Vertauschen von Zeilen und Spalten",
         "Durch Multiplikation mit \\(-1\\)",
         "Durch Invertierung",
+        "Durch Vertauschen von Zeilen und Spalten",
         "Durch Addition der Diagonalelemente"
       ],
-      "correctIndices": [0],
+      "correctIndices": [2],
       "timeLimit": 20
     },
     {
       "type": "multiple-choice",
       "text": "Sei \\( A \\) eine \\( m \\times n \\)-Matrix und \\( B \\) eine \\( n \\times r \\)-Matrix. Welche Dimension hat \\( A \\cdot B \\)?",
       "options": [
-        "\\( m \\times r \\)",
         "\\( n \\times n \\)",
         "\\( m \\times n \\)",
+        "\\( m \\times r \\)",
         "\\( r \\times m \\)"
       ],
-      "correctIndices": [0],
+      "correctIndices": [2],
       "timeLimit": 25
     },
     {
@@ -161,36 +156,36 @@
       "type": "multiple-choice",
       "text": "Was ist die inverse Matrix \\( A^{-1} \\)?",
       "options": [
-        "Die Matrix mit \\( A \\cdot A^{-1} = E \\)",
         "Die transponierte Matrix",
+        "Die Matrix mit \\( A \\cdot A^{-1} = E \\)",
         "Die Matrix mit allen negativen Einträgen",
         "Die Determinante von \\( A \\)"
       ],
-      "correctIndices": [0],
+      "correctIndices": [1],
       "timeLimit": 25
     },
     {
       "type": "multiple-choice",
       "text": "Was folgt aus \\( A \\cdot B = 0 \\) für Matrizen?",
       "options": [
-        "Nicht notwendigerweise \\( A = 0 \\) oder \\( B = 0 \\)",
         "Immer \\( A = 0 \\)",
         "Immer \\( B = 0 \\)",
-        "Immer \\( A = B \\)"
+        "Immer \\( A = B \\)",
+        "Nicht notwendigerweise \\( A = 0 \\) oder \\( B = 0 \\)"
       ],
-      "correctIndices": [0],
+      "correctIndices": [3],
       "timeLimit": 25
     },
     {
       "type": "multiple-choice",
       "text": "Ein lineares Gleichungssystem hat die Form ...",
       "options": [
-        "\\( A \\cdot \\vec{x} = \\vec{b} \\)",
         "\\( A + \\vec{x} = \\vec{b} \\)",
         "\\( A \\cdot \\vec{b} = \\vec{x} \\)",
-        "\\( \\det(A) = \\vec{b} \\)"
+        "\\( \\det(A) = \\vec{b} \\)",
+        "\\( A \\cdot \\vec{x} = \\vec{b} \\)"
       ],
-      "correctIndices": [0],
+      "correctIndices": [3],
       "timeLimit": 20
     },
     {
@@ -221,12 +216,12 @@
       "type": "multiple-choice",
       "text": "Wie berechnet man \\( \\det \\begin{pmatrix} a & c \\\\ b & d \\end{pmatrix} \\)?",
       "options": [
-        "\\( ad - bc \\)",
         "\\( ad + bc \\)",
         "\\( ab - cd \\)",
+        "\\( ad - bc \\)",
         "\\( ac - bd \\)"
       ],
-      "correctIndices": [0],
+      "correctIndices": [2],
       "timeLimit": 25
     },
     {
@@ -245,12 +240,12 @@
       "type": "multiple-choice",
       "text": "Eine quadratische Matrix \\( A \\) ist genau dann invertierbar, wenn ...",
       "options": [
-        "\\( \\det(A) \\neq 0 \\)",
         "\\( \\det(A) = 0 \\)",
         "\\( A \\) symmetrisch ist",
-        "\\( A \\) diagonal ist"
+        "\\( A \\) diagonal ist",
+        "\\( \\det(A) \\neq 0 \\)"
       ],
-      "correctIndices": [0],
+      "correctIndices": [3],
       "timeLimit": 25
     },
     {
@@ -268,25 +263,15 @@
     {
       "type": "multiple-choice",
       "text": "Berechne das Skalarprodukt \\( \\begin{pmatrix} 1 \\\\ 2 \\\\ 3 \\end{pmatrix}^T \\cdot \\begin{pmatrix} 2 \\\\ 1 \\\\ 1 \\end{pmatrix} \\).",
-      "options": [
-        "7",
-        "6",
-        "8",
-        "5"
-      ],
-      "correctIndices": [0],
+      "options": ["6", "8", "7", "5"],
+      "correctIndices": [2],
       "timeLimit": 30
     },
     {
       "type": "multiple-choice",
       "text": "Berechne \\( \\det \\begin{pmatrix} 1 & 2 \\\\ 3 & 4 \\end{pmatrix} \\).",
-      "options": [
-        "\\(-2\\)",
-        "\\(2\\)",
-        "\\(10\\)",
-        "\\(-10\\)"
-      ],
-      "correctIndices": [0],
+      "options": ["\\(2\\)", "\\(-2\\)", "\\(10\\)", "\\(-10\\)"],
+      "correctIndices": [1],
       "timeLimit": 30
     },
     {

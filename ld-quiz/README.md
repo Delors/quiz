@@ -46,6 +46,8 @@ ld-quiz/
     └── demo.html            # Standalone demo page
 ```
 
+The repository root also contains a `Caddyfile` and the `caddy/` snippet files used to deploy the app.
+
 ## Quick Start
 
 ### 1. Install Server Dependencies
@@ -91,18 +93,35 @@ node lib/encrypt-quiz.js my-quiz.json my-quiz-encrypted.txt
 # Enter your password when prompted
 ```
 
-### 4. Start the Server
+### 4. Start the Backend
 
-For development:
+The Node backend exposes only the API and WebSocket endpoint. In production it should sit behind Caddy and not be reached directly from browsers.
 
 ```bash
-node server/server.js
-# Server runs on http://localhost:3000
+cd server
+pnpm install
+node server.js
+# Backend listens on http://localhost:3000
 ```
 
-For production, see [Production Deployment](#6-production-deployment) below.
+### 5. Start Caddy
 
-### 5. Embed the Quiz
+Caddy serves the static files (`public/`, `client/`, `shared/`) and proxies API/WebSocket traffic to the backend. Run it from the repository root:
+
+```bash
+# Local development with HTTPS (uses the mkcert certificate in the repo root)
+CADDY_HOST=localhost TLS_CONFIG=caddy/tls-mkcert.txt caddy run --config Caddyfile
+
+# Local-network development (e.g. for phones on the same Wi-Fi)
+CADDY_HOST=192.168.178.161 TLS_CONFIG=caddy/tls-mkcert.txt caddy run --config Caddyfile
+
+# Production (automatic HTTPS via Let's Encrypt / ZeroSSL)
+CADDY_HOST=quiz.example.com caddy run --config Caddyfile
+```
+
+Open `https://<host>/demo.html` in your browser.
+
+### 6. Embed the Quiz
 
 The `<ld-quiz>` component supports both **encrypted** and **unencrypted** quizzes.
 
@@ -139,9 +158,13 @@ The presenter selects a `.json` file, and the quiz title is shown with a "Start 
 
 > **Note:** The `server-url` attribute is required when the quiz server is hosted on a different domain than the slide set. If omitted, it defaults to the current page's origin.
 
-### Cross-Origin Deployment
+### 7. Cross-Origin Deployment
 
-When the slide server and quiz server are on different origins, the quiz server must allow cross-origin requests. The server is configured with CORS by default (`*` origin), but you can restrict it:
+When the slide server and quiz server are on different origins, the quiz server must allow cross-origin requests.
+
+Caddy adds permissive CORS headers (`Access-Control-Allow-Origin: *`) to all static-file responses (`/client/*`, `/shared/*`, and the files under `/public`), so stylesheets and ES modules can be loaded from any origin.
+
+For the API, CORS is handled by the Node backend. It allows all origins by default, but you can restrict it:
 
 ```bash
 # Allow any origin (default, for development)
@@ -151,38 +174,85 @@ ALLOWED_ORIGINS="*" node server/server.js
 ALLOWED_ORIGINS="https://slides.example.com,https://presenter.example.com" node server/server.js
 ```
 
-The client component automatically loads its CSS from the quiz server, so CORS is required for the stylesheet request as well.
+### Caddy Configuration
 
-### 6. Production Deployment
+The `Caddyfile` in the repository root is configured through environment variables:
 
-For production, use **pm2** to ensure the server restarts automatically after crashes:
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `CADDY_HOST` | `localhost` | Site address (e.g. `localhost`, `192.168.178.161`, `quiz.example.com`) |
+| `BACKEND_HOST` | `localhost` | Host of the Node backend |
+| `BACKEND_PORT` | `3000` | Port of the Node backend |
+| `TLS_CONFIG` | `caddy/tls-auto.txt` | Path to a TLS snippet file. Empty file = automatic HTTPS. Set to `caddy/tls-mkcert.txt` for local HTTPS. |
+| `ALLOWED_ORIGINS` | `*` | Origins allowed by the Node API CORS middleware |
+
+### 8. Production Deployment
+
+#### 8.1 Architecture
+
+In production the Node backend should not be exposed directly. Caddy is the public entry point:
+
+- Caddy terminates TLS and serves static files from `ld-quiz/public`, `ld-quiz/client`, and `ld-quiz/shared`.
+- API requests (`/api/*`) and WebSocket connections (`/ws`) are proxied to the Node backend.
+- The backend can run on `localhost:3000` (or any internal host/port configured via `BACKEND_HOST`/`BACKEND_PORT`).
+
+#### 8.2 Running the backend with pm2
+
+Use **pm2** to keep the backend running and restart it after crashes:
 
 ```bash
 # Install pm2 globally (if not already installed)
 pnpm add -g pm2
 
-# Start the server with pm2
+# Start the backend
 cd server
-pm2 start server.js --name "quiz-server"
+pm2 start server.js --name "quizzy-server"
 
 # Save the pm2 process list so it auto-starts on boot
 pm2 save
 pm2 startup  # Follow the generated command to enable auto-start
 
 # Monitor and manage
-pm2 status           # View running processes
-pm2 logs quiz-server # View server logs
-pm2 monit            # Interactive dashboard
-pm2 reload quiz-server # Zero-downtime reload
+pm2 status                 # View running processes
+pm2 logs quizzy-server     # View server logs
+pm2 monit                 # Interactive dashboard
+pm2 reload quizzy-server  # Zero-downtime reload
 ```
 
-**Why pm2?**
-- Cross-platform: works on macOS, Linux, and Windows
-- Auto-restart on crash or memory limit
-- Built-in log aggregation and monitoring
-- `pm2 startup` auto-generates the correct systemd/launchd service for any OS
+#### 8.3 Running Caddy
 
-### 7. Run the Quiz
+Run Caddy from the repository root. For automatic HTTPS on a public domain, leave `TLS_CONFIG` unset:
+
+```bash
+CADDY_HOST=quiz.example.com \
+BACKEND_HOST=localhost \
+BACKEND_PORT=3000 \
+caddy run --config Caddyfile
+```
+
+To run Caddy as a system service, copy or symlink the `Caddyfile` to `/etc/caddy/Caddyfile` and start the service:
+
+```bash
+sudo cp Caddyfile /etc/caddy/Caddyfile
+sudo systemctl enable --now caddy
+```
+
+Caddy will obtain and renew a TLS certificate automatically.
+
+#### 8.4 TLS
+
+TLS is required because the Web Crypto API (used for hashing and decryption) only works in a secure context. With the production setup, Caddy handles TLS automatically.
+
+If you prefer to use your own certificate, create a snippet file and point `TLS_CONFIG` to it:
+
+```caddy
+# caddy/tls-custom.txt
+tls /path/to/cert.pem /path/to/key.pem
+```
+
+
+
+### 9. Run the Quiz
 
 1. Open the page containing the quiz component
 2. Enter your password to decrypt and start the quiz
@@ -277,11 +347,17 @@ Tests cover:
 
 ### Manual Testing
 
-Start the server and open the demo page:
+Start the backend and Caddy, then open the demo page:
 
 ```bash
-node server/server.js
-# Open http://localhost:3000/demo.html
+# Terminal 1
+cd server
+node server.js
+
+# Terminal 2 (repo root)
+CADDY_HOST=localhost TLS_CONFIG=caddy/tls-mkcert.txt caddy run --config Caddyfile
+
+# Open https://localhost/demo.html
 # Use password: test123
 ```
 

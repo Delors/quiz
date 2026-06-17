@@ -1,0 +1,52 @@
+# Caddy sits in front of the Node quiz backend.
+# It serves static files directly and proxies API/WebSocket traffic.
+#
+# Environment variables (all optional):
+#   CADDY_HOST      Site address, e.g. localhost, 192.168.178.161, quiz.example.com
+#   BACKEND_HOST    Host of the Node backend (default: localhost)
+#   BACKEND_PORT    Port of the Node backend (default: 3000)
+#   TLS_CONFIG      Path to a TLS snippet file (default: caddy/tls-auto.txt)
+#
+# Examples:
+#   caddy run --config Caddyfile
+#   CADDY_HOST=192.168.178.161 TLS_CONFIG=caddy/tls-mkcert.txt caddy run --config Caddyfile
+#   CADDY_HOST=quiz.example.com caddy run --config Caddyfile
+{
+	http_port {$HTTP_PORT:80}
+	https_port {$HTTPS_PORT:443}
+}
+
+{$CADDY_HOST:localhost} {
+	# TLS snippet. Leave empty for automatic HTTPS (production) or local HTTP.
+	# For local HTTPS with mkcert set TLS_CONFIG=caddy/tls-mkcert.txt.
+	import {$TLS_CONFIG:caddy/tls-auto.txt}
+
+	# WebSocket endpoint -> Node backend
+	handle /ws {
+		reverse_proxy {$BACKEND_HOST:localhost}:{$BACKEND_PORT:3000}
+	}
+
+	# API endpoint -> Node backend
+	handle /api/* {
+		reverse_proxy {$BACKEND_HOST:localhost}:{$BACKEND_PORT:3000}
+	}
+
+	# Static files served directly by Caddy
+	handle_path /client/* {
+		header Access-Control-Allow-Origin "*"
+		root * ld-quiz/client
+		file_server
+	}
+
+	handle_path /shared/* {
+		header Access-Control-Allow-Origin "*"
+		root * ld-quiz/shared
+		file_server
+	}
+
+	handle {
+		header Access-Control-Allow-Origin "*"
+		root * ld-quiz/public
+		file_server
+	}
+}
