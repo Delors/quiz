@@ -301,9 +301,9 @@ tls /path/to/cert.pem /path/to/key.pem
 ## Security Model
 
 - The quiz JSON is encrypted on the client side using the presenter's password
-- The server receives the **decrypted** quiz only after the presenter logs in
+- The server receives the **decrypted** quiz only after the presenter decrypts it
 - The server never persists quiz data to disk; all data is ephemeral (in-memory only)
-- The presenter authenticates with a SHA-256 hash of their password
+- The presenter uses a SHA-256 hash of the quiz to identify himself.
 - Participants require no authentication; they join via a random room code
 - **Cross-origin**: The quiz server allows CORS from any origin by default. For production, restrict with `ALLOWED_ORIGINS`
 
@@ -363,12 +363,14 @@ CADDY_HOST=localhost TLS_CONFIG=caddy/tls-mkcert.txt caddy run --config Caddyfil
 
 ### KaTeX Integration
 
-The quiz component attempts to render math using `renderMathInElement` from KaTeX. To enable this, include KaTeX in your host page:
+Math formulas in quiz questions and answers are rendered to HTML on the server before they are sent to clients. The client only needs the KaTeX stylesheet to display the rendered math correctly.
+
+When using the `ld-quiz` web component, the stylesheet is fetched automatically from the configured `server-url` and injected into the shadow DOM, so no manual setup is required.
+
+For standalone pages (such as `demo.html`), include the stylesheet in the host page:
 
 ```html
 <link rel="stylesheet" href="/katex/katex.min.css">
-<script defer src="/katex/katex.min.js"></script>
-<script defer src="/katex/contrib/auto-render.min.js"></script>
 ```
 
 For self-hosted KaTeX, download the distribution to `public/katex/`.
