@@ -7,6 +7,7 @@ class QuizControl {
     this.roomId = null;
     this.state = "login"; // login, sessions, control
     this.roomState = null;
+    this.currentQuestion = null;
   }
 
   async init() {
@@ -83,6 +84,7 @@ class QuizControl {
     switch (msg.type) {
       case "control_connected":
         this.roomState = msg;
+        this.currentQuestion = msg.question || null;
         this.state = "control";
         this.renderControl();
         break;
@@ -95,13 +97,17 @@ class QuizControl {
       case "game_started":
         this.roomState.state = "question";
         this.roomState.currentQuestionIndex = msg.questionIndex;
+        this.currentQuestion = msg.question || null;
         this.updateControlUI();
+        this.renderCurrentQuestion();
         break;
 
       case "question_started":
         this.roomState.state = "question";
         this.roomState.currentQuestionIndex = msg.questionIndex;
+        this.currentQuestion = msg.question || null;
         this.updateControlUI();
+        this.renderCurrentQuestion();
         break;
 
       case "question_results":
@@ -207,6 +213,11 @@ class QuizControl {
           </div>
         </div>
 
+        <div class="question-panel" id="question-panel" style="display:none">
+          <h3>Current Question</h3>
+          <div class="question-text" id="question-text"></div>
+        </div>
+
         <div class="results-panel" id="results-panel" style="display:none">
           <h3>Results</h3>
           <div id="results-content"></div>
@@ -221,6 +232,7 @@ class QuizControl {
 
     this.updateControlUI();
     this.renderLeaderboard();
+    this.renderCurrentQuestion();
 
     // Event listeners
     const btnStart = document.getElementById("btn-start");
@@ -296,6 +308,20 @@ class QuizControl {
   updateAnswerCount(count, total) {
     const el = document.getElementById("answers");
     if (el) el.textContent = `${count} / ${total}`;
+  }
+
+  renderCurrentQuestion() {
+    const panel = document.getElementById("question-panel");
+    const content = document.getElementById("question-text");
+    if (!panel || !content) return;
+
+    if (this.currentQuestion && this.currentQuestion.text) {
+      content.innerHTML = this.currentQuestion.text;
+      panel.style.display = "block";
+    } else {
+      content.innerHTML = "";
+      panel.style.display = "none";
+    }
   }
 
   renderResults(msg) {

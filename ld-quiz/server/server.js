@@ -209,6 +209,7 @@ function handleMessage(ws, data) {
             quizTitle: room.quiz.title,
             totalQuestions: room.quiz.questions.length,
             currentQuestionIndex: room.currentQuestionIndex,
+            question: room.getCurrentQuestion(),
             participantCount: room.getParticipantCount(),
             leaderboard: room.getLeaderboard()
           }));
@@ -241,6 +242,7 @@ function handleMessage(ws, data) {
         room.sendToPresenter({
           type: 'game_started',
           questionIndex: 0,
+          question: room.getCurrentQuestion(),
           participantCount: room.getParticipantCount()
         });
         break;
