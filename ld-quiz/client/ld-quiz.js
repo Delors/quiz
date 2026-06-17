@@ -42,7 +42,6 @@ class QuizHost extends HTMLElement {
     this.maxReconnectAttempts = 5;
     this.reconnectDelay = 1000;
     this.currentState = "login";
-    this.timerInterval = null;
     this.serverUrl = "";
   }
 
@@ -98,9 +97,6 @@ class QuizHost extends HTMLElement {
       }
     } catch (e) {
       console.error("closing websocket connection failed", e);
-    }
-    if (this.timerInterval) {
-      clearInterval(this.timerInterval);
     }
   }
 
@@ -282,40 +278,6 @@ class QuizHost extends HTMLElement {
         this.updateParticipantCount(msg.count);
         break;
 
-      case "question":
-        this.renderQuestion(
-          msg.question,
-          msg.questionIndex,
-          msg.totalQuestions,
-          msg.startTime,
-        );
-        break;
-
-      case "results":
-        this.renderResults(msg.leaderboard, msg.questionIndex, msg.waiting);
-        break;
-
-      case "game_ended":
-        this.renderFinalResults(msg.leaderboard);
-        break;
-
-      case "answer_accepted":
-        // Only relevant if used as a participant client; ignore if results already shown
-        if (this.currentState !== "results" && this.currentState !== "ended") {
-          this.currentState = "answer_accepted";
-          // Disable the submit button to prevent double submission
-          const submitBtn = this.shadowRoot.getElementById("quiz-submit-btn");
-          if (submitBtn) {
-            submitBtn.disabled = true;
-            submitBtn.textContent = "Submitted";
-          }
-          // Disable option clicks
-          this.shadowRoot.querySelectorAll(".quiz-option").forEach((opt) => {
-            opt.style.pointerEvents = "none";
-          });
-        }
-        break;
-
       case "error":
         this.showError(msg.message);
         break;
@@ -379,128 +341,6 @@ class QuizHost extends HTMLElement {
       }
     }
     */
-  }
-
-  renderQuestion(question, index, total, startTime) {
-    this.currentState = "question";
-    const timeLimit = question.timeLimit || 0;
-    let timerHtml = "";
-    if (timeLimit > 0) {
-      timerHtml = `<div class="quiz-timer" id="timer">${timeLimit}</div>`;
-    }
-
-    let optionsHtml = "";
-    let submitHtml = "";
-    if (question.type === "multiple-choice" && question.options) {
-      optionsHtml = `<div class="quiz-options" id="quiz-options">
-        ${question.options.map((opt, i) => `<div class="quiz-option" data-index="${i}">${opt}</div>`).join("")}
-      </div>`;
-      submitHtml = `<button class="quiz-btn quiz-btn-primary" id="quiz-submit-btn" style="margin-top:1rem;width:100%">Submit</button>`;
-    }
-
-    this.contentEl.innerHTML = `
-      <div class="quiz-question">
-        <div class="quiz-question-counter">Question ${index + 1} of ${total}</div>
-        ${timerHtml}
-        <div class="quiz-question-text" id="question-text">${question.text}</div>
-        ${optionsHtml}
-        ${submitHtml}
-      </div>
-    `;
-
-    if (question.type === "multiple-choice" && question.options) {
-      const selected = new Set();
-      const optionsEl = this.shadowRoot.getElementById("quiz-options");
-      const submitBtn = this.shadowRoot.getElementById("quiz-submit-btn");
-      optionsEl.querySelectorAll(".quiz-option").forEach((opt) => {
-        opt.addEventListener("click", () => {
-          const idx = parseInt(opt.dataset.index);
-          if (selected.has(idx)) {
-            selected.delete(idx);
-            opt.classList.remove("selected");
-          } else {
-            selected.add(idx);
-            opt.classList.add("selected");
-          }
-        });
-      });
-      submitBtn.addEventListener("click", () => {
-        const answer = Array.from(selected).sort((a, b) => a - b);
-        this.ws.send(JSON.stringify({ type: "submit_answer", answer }));
-      });
-    }
-
-    if (timeLimit > 0) {
-      let remaining = timeLimit;
-      const timerEl = this.shadowRoot.getElementById("timer");
-      this.timerInterval = setInterval(() => {
-        remaining--;
-        if (timerEl) {
-          timerEl.textContent = remaining;
-          if (remaining <= 5) timerEl.classList.add("urgent");
-        }
-        if (remaining <= 0) {
-          clearInterval(this.timerInterval);
-        }
-      }, 1000);
-    }
-  }
-
-  renderResults(leaderboard, questionIndex, waiting) {
-    this.currentState = "results";
-    if (this.timerInterval) {
-      clearInterval(this.timerInterval);
-    }
-
-    const listHtml = leaderboard
-      .map(
-        (entry, i) => `
-      <div class="quiz-leaderboard-item">
-        <span class="quiz-leaderboard-rank">${i + 1}</span>
-        <span class="quiz-leaderboard-name">${this.escapeHtml(entry.name)}</span>
-        <span class="quiz-leaderboard-score">${entry.score}</span>
-      </div>
-    `,
-      )
-      .join("");
-
-    this.contentEl.innerHTML = `
-      <div class="quiz-question">
-        <div class="quiz-question-counter">Results - Question ${questionIndex + 1}</div>
-        <div class="quiz-leaderboard">${listHtml}</div>
-        <div class="quiz-info">${waiting ? "Waiting for next question..." : "Final results"}</div>
-      </div>
-    `;
-  }
-
-  renderFinalResults(leaderboard) {
-    this.currentState = "ended";
-    const listHtml = leaderboard
-      .map(
-        (entry, i) => `
-      <div class="quiz-leaderboard-item">
-        <span class="quiz-leaderboard-rank">${i + 1}</span>
-        <span class="quiz-leaderboard-name">${this.escapeHtml(entry.name)}</span>
-        <span class="quiz-leaderboard-score">${entry.score}</span>
-      </div>
-    `,
-      )
-      .join("");
-
-    this.contentEl.innerHTML = `
-      <div class="quiz-question">
-        <h2 class="quiz-title">Final Results</h2>
-        <div class="quiz-leaderboard">${listHtml}</div>
-        <div class="quiz-controls">
-          <button class="quiz-btn quiz-btn-secondary" id="btn-restart">New Quiz</button>
-        </div>
-      </div>
-    `;
-
-    const btnRestart = this.shadowRoot.getElementById("btn-restart");
-    btnRestart.addEventListener("click", () => {
-      location.reload();
-    });
   }
 
   showError(message) {
