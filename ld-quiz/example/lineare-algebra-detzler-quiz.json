@@ -19,8 +19,8 @@
       "options": [
         "Eine \\( n \\times n \\)-Matrix",
         "Einen Skalarkörper",
-        "Einen Einheitsvektor"
-        "Einen \\( n \\)-dimensionalen Vektorraum",
+        "Einen Einheitsvektor",
+        "Einen \\( n \\)-dimensionalen Vektorraum"
       ],
       "correctIndices": [3],
       "timeLimit": 20
