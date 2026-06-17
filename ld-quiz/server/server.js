@@ -1,17 +1,15 @@
 import express from 'express';
 import { WebSocketServer } from 'ws';
 import { createServer } from 'http';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
 import { RoomManager } from './rooms.js';
 import { renderQuiz } from './math-renderer.js';
 import { validateName } from './name-validator.js';
+import { getServerAddresses } from './network-addresses.js';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 const server = createServer(app);
 const MAX_QUIZ_SIZE = 1024 * 1024; // 1MB
-const wss = new WebSocketServer({ server, maxPayload: MAX_QUIZ_SIZE });
+const wss = new WebSocketServer({ server, path: '/ws', maxPayload: MAX_QUIZ_SIZE });
 const roomManager = new RoomManager();
 
 // CORS configuration
@@ -19,13 +17,15 @@ const allowedOrigins = (process.env.ALLOWED_ORIGINS || '*').split(',').map(o => 
 
 function corsMiddleware(req, res, next) {
   const origin = req.headers.origin;
-  if (allowedOrigins.includes('*') || allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin || '*');
+  if (allowedOrigins.includes('*')) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+  } else if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
   }
   res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  
+
   if (req.method === 'OPTIONS') {
     res.sendStatus(204);
     return;
@@ -34,11 +34,6 @@ function corsMiddleware(req, res, next) {
 }
 
 app.use(corsMiddleware);
-
-// Serve static files
-app.use(express.static(join(__dirname, '../public')));
-app.use('/shared', express.static(join(__dirname, '../shared')));
-app.use('/client', express.static(join(__dirname, '../client')));
 
 // API endpoint for presenter sessions
 app.get('/api/sessions', (req, res) => {
@@ -413,5 +408,9 @@ function handleDisconnect(ws) {
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-  console.log(`Quiz server running on port ${PORT}`);
+  console.log(`Quiz backend listening on port ${PORT}`);
+  console.log('Caddy (or another reverse proxy) should be the public entry point.');
+  for (const { url } of getServerAddresses(PORT)) {
+    console.log(`  backend: ${url}`);
+  }
 });
