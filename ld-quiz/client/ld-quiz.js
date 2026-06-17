@@ -208,7 +208,8 @@ class QuizHost extends HTMLElement {
         btnStart.addEventListener("click", () => {
           this.connectWebSocket();
         });
-      } catch (err) {
+      } catch (e) {
+        console.error("failed processing JSON file", e);
         errorEl.textContent = "Invalid JSON file";
         errorEl.style.display = "block";
         previewContainer.style.display = "none";
