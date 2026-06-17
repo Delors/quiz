@@ -106,12 +106,17 @@
 .quiz-qr-container {
   margin: 1rem auto;
   display: inline-block;
+  background: var(--quiz-bg);
+  padding: 0.5rem;
+  border-radius: var(--quiz-radius);
+  border: 1px solid var(--quiz-border);
 }
 
 .quiz-qr-container canvas {
   display: block;
-  border-radius: var(--quiz-radius);
-  border: 1px solid var(--quiz-border);
+  max-width: 100%;
+  height: auto;
+  image-rendering: pixelated;
 }
 
 .quiz-join-url {

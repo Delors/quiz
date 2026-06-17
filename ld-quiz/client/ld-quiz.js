@@ -322,7 +322,13 @@ class QuizHost extends HTMLElement {
     `;
 
     const canvas = this.shadowRoot.getElementById('qr-canvas');
-    QRCode.toCanvas(canvas, joinUrl, { width: 200, colorDark: '#1e293b', colorLight: '#ffffff' });
+    QRCode.toCanvas(canvas, joinUrl, {
+      width: 256,
+      margin: 4,
+      errorCorrectionLevel: 'Q',
+      colorDark: '#1e293b',
+      colorLight: '#ffffff',
+    });
 
     const btnControl = this.shadowRoot.getElementById('btn-control');
     btnControl.addEventListener('click', () => this.openControlWindow());
