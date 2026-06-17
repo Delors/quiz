@@ -1,4 +1,4 @@
-import { decryptAESGCMPBKDF } from '../shared/ld-crypto.js';
+import { decryptAESGCMPBKDF } from "../shared/ld-crypto.js";
 
 const convertModuleBasedSpecificationToLDQuizElement = async () => {
   const modules = document
@@ -20,7 +20,7 @@ const convertModuleBasedSpecificationToLDQuizElement = async () => {
       quizElement.setAttribute("quiz", encryptedQuiz);
 
       // Optional: read server-url from module attributes
-      const serverUrl = moduleElement.getAttribute("server-url");
+      const serverUrl = moduleElement.dataset.ldQuizServer;
       if (serverUrl) {
         quizElement.setAttribute("server-url", serverUrl);
       }
@@ -36,15 +36,18 @@ const convertModuleBasedSpecificationToLDQuizElement = async () => {
 };
 
 // Check if we're in a LectureDoc2 environment
-if (typeof ldEvents !== 'undefined') {
+if (typeof ldEvents !== "undefined") {
   ldEvents.addEventListener(
     "beforeLDDOMManipulations",
     convertModuleBasedSpecificationToLDQuizElement,
   );
 } else {
   // Fallback: process immediately if not in LectureDoc2
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', convertModuleBasedSpecificationToLDQuizElement);
+  if (document.readyState === "loading") {
+    document.addEventListener(
+      "DOMContentLoaded",
+      convertModuleBasedSpecificationToLDQuizElement,
+    );
   } else {
     convertModuleBasedSpecificationToLDQuizElement();
   }
