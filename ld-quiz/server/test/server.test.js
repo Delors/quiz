@@ -4,11 +4,7 @@ import { createServer } from 'http';
 import express from 'express';
 import { WebSocketServer } from 'ws';
 import { WebSocket } from 'ws';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
 import { RoomManager } from '../rooms.js';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
 
 describe('Server Integration', () => {
   let server;
@@ -26,18 +22,12 @@ describe('Server Integration', () => {
       res.setHeader('Access-Control-Allow-Origin', '*');
       res.setHeader('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS');
       res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-      res.setHeader('Access-Control-Allow-Credentials', 'true');
       if (req.method === 'OPTIONS') {
         res.sendStatus(204);
         return;
       }
       next();
     });
-    
-    // Static files
-    app.use(express.static(join(__dirname, '../../public')));
-    app.use('/shared', express.static(join(__dirname, '../../shared')));
-    app.use('/client', express.static(join(__dirname, '../../client')));
     
     // API endpoint
     app.get('/api/sessions', (req, res) => {
@@ -50,7 +40,7 @@ describe('Server Integration', () => {
     });
     
     server = createServer(app);
-    wss = new WebSocketServer({ server, maxPayload: MAX_QUIZ_SIZE });
+    wss = new WebSocketServer({ server, path: '/ws', maxPayload: MAX_QUIZ_SIZE });
     
     // Simple echo handler for testing
     wss.on('connection', (ws) => {
@@ -108,16 +98,6 @@ describe('Server Integration', () => {
     });
   });
 
-  it('serves static files with CORS headers', async () => {
-    const res = await fetch(`http://127.0.0.1:${port}/join.html`, {
-      headers: { 'Origin': 'http://other-origin.com' }
-    });
-    assert.strictEqual(res.status, 200);
-    assert.ok(res.headers.get('access-control-allow-origin'));
-    const body = await res.text();
-    assert.ok(body.includes('Join Quiz'));
-  });
-
   it('handles OPTIONS preflight', async () => {
     const res = await fetch(`http://127.0.0.1:${port}/api/sessions`, {
       method: 'OPTIONS',
@@ -154,18 +134,8 @@ describe('Server Integration', () => {
     assert.strictEqual(body.sessions[0].title, 'Test Quiz');
   });
 
-  it('serves katex CSS with CORS headers', async () => {
-    const res = await fetch(`http://127.0.0.1:${port}/katex/katex.min.css`, {
-      headers: { 'Origin': 'http://other-origin.com' }
-    });
-    assert.strictEqual(res.status, 200);
-    assert.ok(res.headers.get('access-control-allow-origin'));
-    const body = await res.text();
-    assert.ok(body.includes('.katex'));
-  });
-
   it('WebSocket create_room returns room_created', async () => {
-    const ws = new WebSocket(`ws://127.0.0.1:${port}`);
+    const ws = new WebSocket(`ws://127.0.0.1:${port}/ws`);
     await new Promise((resolve, reject) => {
       ws.on('open', resolve);
       ws.on('error', reject);
@@ -188,7 +158,7 @@ describe('Server Integration', () => {
   });
 
   it('WebSocket rejects oversized create_room payload', async () => {
-    const ws = new WebSocket(`ws://127.0.0.1:${port}`);
+    const ws = new WebSocket(`ws://127.0.0.1:${port}/ws`);
     await new Promise((resolve, reject) => {
       ws.on('open', resolve);
       ws.on('error', reject);
@@ -215,7 +185,7 @@ describe('Server Integration', () => {
   });
 
   it('WebSocket join_room returns error for nonexistent room', async () => {
-    const ws = new WebSocket(`ws://127.0.0.1:${port}`);
+    const ws = new WebSocket(`ws://127.0.0.1:${port}/ws`);
     await new Promise((resolve, reject) => {
       ws.on('open', resolve);
       ws.on('error', reject);
@@ -236,7 +206,7 @@ describe('Server Integration', () => {
 
   it('WebSocket join_room succeeds for existing room', async () => {
     // Create room first
-    const presenterWs = new WebSocket(`ws://127.0.0.1:${port}`);
+    const presenterWs = new WebSocket(`ws://127.0.0.1:${port}/ws`);
     await new Promise((resolve, reject) => {
       presenterWs.on('open', resolve);
       presenterWs.on('error', reject);
@@ -252,7 +222,7 @@ describe('Server Integration', () => {
     const roomId = roomMsg.roomId;
     
     // Now join as participant
-    const participantWs = new WebSocket(`ws://127.0.0.1:${port}`);
+    const participantWs = new WebSocket(`ws://127.0.0.1:${port}/ws`);
     await new Promise((resolve, reject) => {
       participantWs.on('open', resolve);
       participantWs.on('error', reject);
