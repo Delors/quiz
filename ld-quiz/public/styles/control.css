@@ -1,0 +1,199 @@
+@layer page {
+    body {
+        min-height: 100vh;
+        padding: var(--quiz-space-md);
+    }
+
+    .container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .login__container {
+        max-width: 400px;
+        margin: 3rem auto;
+
+        h2 {
+            margin: 0 0 var(--quiz-space-lg) 0;
+            text-align: center;
+        }
+    }
+
+    .control__header {
+        border-bottom: 1px solid var(--quiz-border);
+        padding-bottom: var(--quiz-space-md);
+        margin-bottom: var(--quiz-space-md);
+
+        h2 {
+            margin: 0 0 var(--quiz-space-xs) 0;
+        }
+    }
+
+    .room-info {
+        display: flex;
+        gap: var(--quiz-space-md);
+        color: var(--quiz-text-secondary);
+        font-size: 0.875rem;
+    }
+
+    .participant-count {
+        color: var(--quiz-primary);
+        font-weight: 500;
+    }
+
+    .control__panel {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--quiz-space-lg);
+        margin-bottom: var(--quiz-space-lg);
+
+        @media (max-width: 640px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .status-panel {
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--quiz-space-xs) 0;
+            border-bottom: 1px solid var(--quiz-border);
+
+            &:last-child {
+                border-bottom: none;
+            }
+        }
+
+        .status-label {
+            color: var(--quiz-text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .status-value {
+            font-weight: 500;
+            color: var(--quiz-text);
+        }
+    }
+
+    .actions-panel {
+        display: flex;
+        flex-direction: column;
+        gap: var(--quiz-space-xs);
+    }
+
+    .question-panel {
+        margin-bottom: var(--quiz-space-lg);
+
+        h3 {
+            margin: 0 0 var(--quiz-space-sm) 0;
+            color: var(--quiz-text-secondary);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+    }
+
+    .results-panel {
+        margin-bottom: var(--quiz-space-lg);
+
+        h3 {
+            margin: 0 0 var(--quiz-space-md) 0;
+            color: var(--quiz-text);
+        }
+    }
+
+    .answers-list {
+        display: flex;
+        flex-direction: column;
+        gap: var(--quiz-space-xs);
+    }
+
+    .answer-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: var(--quiz-space-sm);
+        background: var(--quiz-surface);
+        border-radius: var(--quiz-radius-sm);
+        border: 1px solid var(--quiz-border);
+    }
+
+    .answer-name {
+        flex: 1;
+        font-weight: 500;
+    }
+
+    .answer-value {
+        color: var(--quiz-text-secondary);
+        margin: 0 var(--quiz-space-md);
+    }
+
+    .answer-points {
+        font-weight: 600;
+        color: var(--quiz-danger);
+
+        &.answer-points--positive {
+            color: var(--quiz-success);
+        }
+    }
+
+    .leaderboard-panel {
+        margin-bottom: var(--quiz-space-lg);
+
+        h3 {
+            margin: 0 0 var(--quiz-space-md) 0;
+            color: var(--quiz-text);
+        }
+
+        .leaderboard__item {
+            padding: var(--quiz-space-sm);
+            border: 1px solid var(--quiz-border);
+            border-radius: var(--quiz-radius-sm);
+            background: var(--quiz-surface);
+
+            &:first-child {
+                background: var(--quiz-primary-alpha-5);
+                border-color: var(--quiz-primary);
+            }
+        }
+    }
+
+    .empty {
+        color: var(--quiz-text-secondary);
+        text-align: center;
+        padding: var(--quiz-space-md);
+    }
+
+    .sessions-container {
+        max-width: 800px;
+        margin: 0 auto;
+
+        h2 {
+            color: var(--quiz-text);
+            margin-bottom: var(--quiz-space-lg);
+        }
+    }
+
+    .sessions-list {
+        display: flex;
+        flex-direction: column;
+        gap: var(--quiz-space-md);
+    }
+
+    .session-card {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        h3 {
+            margin: 0 0 var(--quiz-space-xs) 0;
+            color: var(--quiz-text);
+        }
+
+        p {
+            margin: 0.25rem 0;
+            color: var(--quiz-text-secondary);
+            font-size: 0.875rem;
+        }
+    }
+}

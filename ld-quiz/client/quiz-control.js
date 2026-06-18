@@ -26,11 +26,11 @@ class QuizControl {
   renderLogin() {
     const content = document.getElementById("content");
     content.innerHTML = `
-      <div class="login-container">
+      <div class="card login__container">
         <h2>Presenter Login</h2>
         <form id="login-form">
           <input type="password" id="password" class="input" placeholder="Enter your password" required>
-          <button type="submit" class="btn btn-primary">Login</button>
+          <button type="submit" class="btn btn--primary btn--full">Login</button>
         </form>
         <div id="error" class="error" style="display:none"></div>
       </div>
@@ -137,10 +137,10 @@ class QuizControl {
     const content = document.getElementById("content");
     if (sessions.length === 0) {
       content.innerHTML = `
-        <div class="login-container">
+        <div class="card login__container">
           <h2>No Active Sessions</h2>
           <p>No active quiz sessions found for this account.</p>
-          <button class="btn btn-secondary" onclick="location.reload()">Refresh</button>
+          <button class="btn btn--secondary" onclick="location.reload()">Refresh</button>
         </div>
       `;
       return;
@@ -149,13 +149,13 @@ class QuizControl {
     const listHtml = sessions
       .map(
         (s) => `
-      <div class="session-card">
+      <div class="card session-card">
         <div class="session-info">
           <h3>${this.escapeHtml(s.title)}</h3>
           <p>Room: ${s.roomId} | Participants: ${s.participantCount}</p>
           <p>State: ${s.state} | Question: ${s.currentQuestionIndex + 1}/${s.totalQuestions}</p>
         </div>
-        <button class="btn btn-primary" onclick="location.href='?token=${this.presenterToken}&room=${s.roomId}'">
+        <button class="btn btn--primary" onclick="location.href='?token=${this.presenterToken}&room=${s.roomId}'">
           Control
         </button>
       </div>
@@ -174,8 +174,8 @@ class QuizControl {
   renderControl() {
     const content = document.getElementById("content");
     content.innerHTML = `
-      <div class="control-container">
-        <div class="control-header">
+      <div class="card control__container">
+        <div class="control__header">
           <h2>${this.escapeHtml(this.roomState.quizTitle)}</h2>
           <div class="room-info">
             <span>Room: ${this.roomState.roomId}</span>
@@ -183,8 +183,8 @@ class QuizControl {
           </div>
         </div>
 
-        <div class="control-panel">
-          <div class="status-panel">
+        <div class="control__panel">
+          <div class="panel status-panel">
             <div class="status-item">
               <span class="status-label">State:</span>
               <span class="status-value" id="state">${this.roomState.state}</span>
@@ -201,29 +201,29 @@ class QuizControl {
 
           <div class="actions-panel">
             <div id="lobby-actions">
-              <button class="btn btn-success" id="btn-start">Start Game</button>
+              <button class="btn btn--success" id="btn-start">Start Game</button>
             </div>
             <div id="question-actions" style="display:none">
-              <button class="btn btn-primary btn-danger" id="btn-end">End Question</button>
+              <button class="btn btn--danger" id="btn-end">End Question</button>
             </div>
             <div id="results-actions" style="display:none">
-              <button class="btn btn-primary" id="btn-next">Next Question</button>
-              <button class="btn btn-primary btn-danger" id="btn-end-game">End Game</button>
+              <button class="btn btn--primary" id="btn-next">Next Question</button>
+              <button class="btn btn--danger" id="btn-end-game">End Game</button>
             </div>
           </div>
         </div>
 
-        <div class="question-panel" id="question-panel" style="display:none">
+        <div class="card question-panel" id="question-panel" style="display:none">
           <h3>Current Question</h3>
-          <div class="question-text" id="question-text"></div>
+          <div class="question__text" id="question-text"></div>
         </div>
 
-        <div class="results-panel" id="results-panel" style="display:none">
+        <div class="panel results-panel" id="results-panel" style="display:none">
           <h3>Results</h3>
           <div id="results-content"></div>
         </div>
 
-        <div class="leaderboard-panel">
+        <div class="panel leaderboard-panel">
           <h3>Leaderboard</h3>
           <div id="leaderboard-content"></div>
         </div>
@@ -291,10 +291,10 @@ class QuizControl {
       const isLastQuestion =
         this.roomState.currentQuestionIndex + 1 >= this.roomState.totalQuestions;
       if (isLastQuestion) {
-        btnNext.classList.add("btn-disabled");
+        btnNext.classList.add("btn--disabled");
         btnNext.disabled = true;
       } else {
-        btnNext.classList.remove("btn-disabled");
+        btnNext.classList.remove("btn--disabled");
         btnNext.disabled = false;
       }
     }
@@ -339,7 +339,7 @@ class QuizControl {
       <div class="answer-item">
         <span class="answer-name">${this.escapeHtml(a.name)}</span>
         <span class="answer-value">${answerValue}</span>
-        <span class="answer-points ${a.points > 0 ? "positive" : ""}">${a.points} pts</span>
+        <span class="answer-points ${a.points > 0 ? "answer-points--positive" : ""}">${a.points} pts</span>
       </div>
     `;
         },
@@ -367,10 +367,10 @@ class QuizControl {
     const listHtml = list
       .map(
         (entry, i) => `
-      <div class="leaderboard-item">
-        <span class="rank">${i + 1}</span>
-        <span class="name">${this.escapeHtml(entry.name)}</span>
-        <span class="score">${entry.score}</span>
+      <div class="leaderboard__item">
+        <span class="leaderboard__rank">${i + 1}</span>
+        <span class="leaderboard__name">${this.escapeHtml(entry.name)}</span>
+        <span class="leaderboard__score">${entry.score}</span>
       </div>
     `,
       )

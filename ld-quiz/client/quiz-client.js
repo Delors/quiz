@@ -51,7 +51,7 @@ class QuizClient {
     content.innerHTML = `
       <form id="join-form">
         <input type="text" id="name" class="input" placeholder="Enter your name" maxlength="50" required>
-        <button type="submit" class="btn btn-primary">Join Quiz</button>
+        <button type="submit" class="btn btn--primary btn--full">Join Quiz</button>
         <div id="name-error" class="error-text" style="display:none;margin-top:0.5rem;color:var(--error-color)"></div>
       </form>
     `;
@@ -160,7 +160,7 @@ class QuizClient {
     if (timeLimit > 0) {
       const elapsed = Math.floor((Date.now() - startTime) / 1000);
       const remaining = Math.max(0, timeLimit - elapsed);
-      timerHtml = `<div class="timer ${remaining <= 5 ? 'urgent' : ''}" id="timer">${remaining}</div>`;
+      timerHtml = `<div class="timer ${remaining <= 5 ? 'timer--urgent' : ''}" id="timer">${remaining}</div>`;
     }
 
     let inputHtml = '';
@@ -168,25 +168,25 @@ class QuizClient {
       inputHtml = `
         <div class="options" id="options">
           ${question.options.map((opt, i) => `
-            <div class="option-btn" data-index="${i}">${opt}</div>
+            <div class="option" data-index="${i}">${opt}</div>
           `).join('')}
         </div>
-        <button class="btn btn-primary" id="submit-btn" style="margin-top:1rem;width:100%">Submit</button>
+        <button class="btn btn--primary btn--full" id="submit-btn" style="margin-top:1rem">Submit</button>
       `;
     } else if (question.type === 'estimation') {
       inputHtml = `
         <form id="answer-form">
           <input type="number" id="answer" class="input" placeholder="Your estimate" step="any" required>
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="submit" class="btn btn--primary btn--full">Submit</button>
         </form>
       `;
     }
 
     content.innerHTML = `
       <div class="question">
-        <div class="question-counter">Question ${index + 1} of ${total}</div>
+        <div class="question__counter">Question ${index + 1} of ${total}</div>
         ${timerHtml}
-        <div class="question-text" id="question-text">${question.text}</div>
+        <div class="question__text" id="question-text">${question.text}</div>
         ${inputHtml}
       </div>
     `;
@@ -198,7 +198,7 @@ class QuizClient {
         const remaining = Math.max(0, timeLimit - elapsed);
         if (timerEl) {
           timerEl.textContent = remaining;
-          if (remaining <= 5) timerEl.classList.add('urgent');
+          if (remaining <= 5)           timerEl.classList.add('timer--urgent');
         }
         if (remaining <= 0) {
           clearInterval(interval);
@@ -210,15 +210,15 @@ class QuizClient {
       const selected = new Set();
       const optionsEl = document.getElementById('options');
       const submitBtn = document.getElementById('submit-btn');
-      optionsEl.querySelectorAll('.option-btn').forEach(btn => {
+      optionsEl.querySelectorAll('.option').forEach(btn => {
         btn.addEventListener('click', () => {
           const idx = parseInt(btn.dataset.index);
           if (selected.has(idx)) {
             selected.delete(idx);
-            btn.classList.remove('selected');
+            btn.classList.remove('option--selected');
           } else {
             selected.add(idx);
-            btn.classList.add('selected');
+            btn.classList.add('option--selected');
           }
         });
       });
@@ -242,16 +242,16 @@ class QuizClient {
     const myRank = myEntry ? leaderboard.indexOf(myEntry) + 1 : '-';
     
     const listHtml = leaderboard.slice(0, 5).map((entry, i) => `
-      <div class="leaderboard-item ${entry.id === this.participantId ? 'me' : ''}">
-        <span class="rank">${i + 1}</span>
-        <span class="name">${this.escapeHtml(entry.name)}</span>
-        <span class="score">${entry.score}</span>
+      <div class="leaderboard__item ${entry.id === this.participantId ? 'leaderboard__item--highlight' : ''}">
+        <span class="leaderboard__rank">${i + 1}</span>
+        <span class="leaderboard__name">${this.escapeHtml(entry.name)}</span>
+        <span class="leaderboard__score">${entry.score}</span>
       </div>
     `).join('');
 
     content.innerHTML = `
       <div class="results">
-        <div class="question-counter">Results - Question ${questionIndex + 1}</div>
+        <div class="question__counter">Results - Question ${questionIndex + 1}</div>
         <div class="my-stats">Your rank: ${myRank} | Score: ${myEntry ? myEntry.score : 0}</div>
         <div class="leaderboard">${listHtml}</div>
         <p class="waiting-text">${waiting ? 'Waiting for next question...' : 'Quiz complete!'}</p>
@@ -265,10 +265,10 @@ class QuizClient {
     const myRank = myEntry ? leaderboard.indexOf(myEntry) + 1 : '-';
     
     const listHtml = leaderboard.slice(0, 10).map((entry, i) => `
-      <div class="leaderboard-item ${entry.id === this.participantId ? 'me' : ''}">
-        <span class="rank">${i + 1}</span>
-        <span class="name">${this.escapeHtml(entry.name)}</span>
-        <span class="score">${entry.score}</span>
+      <div class="leaderboard__item ${entry.id === this.participantId ? 'leaderboard__item--highlight' : ''}">
+        <span class="leaderboard__rank">${i + 1}</span>
+        <span class="leaderboard__name">${this.escapeHtml(entry.name)}</span>
+        <span class="leaderboard__score">${entry.score}</span>
       </div>
     `).join('');
 

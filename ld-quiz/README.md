@@ -389,6 +389,8 @@ CADDY_HOST=localhost TLS_CONFIG=caddy/tls-mkcert.txt caddy run --config Caddyfil
 # Use password: test123
 ```
 
+Go to, e.g.,: https://192.168.178.161/demo.html to open the application.
+
 ### KaTeX Integration
 
 Math formulas in quiz questions and answers are rendered to HTML on the server before they are sent to clients. The client only needs the KaTeX stylesheet to display the rendered math correctly.
