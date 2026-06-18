@@ -1,5 +1,6 @@
 node_modules/
 *.log
+server.log
 .DS_Store
 
 # Development TLS certificates
