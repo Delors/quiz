@@ -1,0 +1,392 @@
+{
+  "title": "Mathematik: Funktionen, Differential- und Integralrechnung",
+  "questions": [
+    {
+      "type": "multiple-choice",
+      "text": "Was ordnet eine Funktion gemäß Definition jedem Element der Menge \\( M_1 \\) zu?",
+      "options": [
+        "Genau ein Element der Menge \\( M_2 \\)",
+        "Mindestens ein Element der Menge \\( M_2 \\)",
+        "Beliebig viele Elemente der Menge \\( M_2 \\)"
+      ],
+      "correctIndices": [0],
+      "timeLimit": 25
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Welche der folgenden sind im Text genannte Darstellungsformen einer Funktion?",
+      "options": [
+        "Venn-Diagramm",
+        "Menge geordneter Paare",
+        "Darstellung im Koordinatensystem",
+        "Differentialgleichung"
+      ],
+      "correctIndices": [0, 1, 2],
+      "timeLimit": 40
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Damit \\( \\lim_{x\\to p} f(x) \\) für eine reelle Zahl \\( p \\) sinnvoll ist, muss \\( p \\) ...",
+      "options": [
+        "ein Häufungspunkt des Definitionsbereichs \\( D \\) sein",
+        "zwingend im Definitionsbereich \\( D \\) liegen",
+        "eine Nullstelle von \\( f \\) sein"
+      ],
+      "correctIndices": [0],
+      "timeLimit": 35
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Wann existiert der Grenzwert einer Funktion an einer Stelle?",
+      "options": [
+        "Genau dann, wenn beide einseitigen Grenzwerte existieren und übereinstimmen",
+        "Sobald der linksseitige Grenzwert existiert",
+        "Immer, sofern die Funktion an der Stelle definiert ist"
+      ],
+      "correctIndices": [0],
+      "timeLimit": 30
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Das Epsilon-Delta-Kriterium besagt: \\( f \\) ist stetig in \\( x_0 \\), wenn zu jedem \\( \\varepsilon>0 \\) ein \\( \\delta>0 \\) existiert, sodass ...",
+      "options": [
+        "aus \\( |x-x_0|<\\delta \\) folgt \\( |f(x)-f(x_0)|<\\varepsilon \\)",
+        "aus \\( |f(x)-f(x_0)|<\\delta \\) folgt \\( |x-x_0|<\\varepsilon \\)",
+        "\\( |x-x_0|<\\varepsilon \\) und \\( |f(x)-f(x_0)|<\\delta \\) gleichzeitig gilt"
+      ],
+      "correctIndices": [0],
+      "timeLimit": 45
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Die Ableitung \\( f'(x_0) \\) ist definiert als ...",
+      "options": [
+        "\\( \\lim_{\\Delta x\\to 0} \\dfrac{f(x_0+\\Delta x)-f(x_0)}{\\Delta x} \\)",
+        "\\( \\lim_{\\Delta x\\to 0} \\big(f(x_0+\\Delta x)-f(x_0)\\big) \\)",
+        "\\( \\dfrac{f(x_0+\\Delta x)+f(x_0)}{\\Delta x} \\)"
+      ],
+      "correctIndices": [0],
+      "timeLimit": 40
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Für \\( f(x)=u(x)\\cdot v(x) \\) lautet die Produktregel \\( f'(x)= \\) ?",
+      "options": [
+        "\\( u'(x)\\,v(x)+u(x)\\,v'(x) \\)",
+        "\\( u'(x)\\,v'(x) \\)",
+        "\\( u'(x)\\,v(x)-u(x)\\,v'(x) \\)"
+      ],
+      "correctIndices": [0],
+      "timeLimit": 35
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Für \\( f(x)=\\dfrac{u(x)}{v(x)} \\) lautet die Quotientenregel \\( f'(x)= \\) ?",
+      "options": [
+        "\\( \\dfrac{u'(x)\\,v(x)-u(x)\\,v'(x)}{\\big(v(x)\\big)^2} \\)",
+        "\\( \\dfrac{u'(x)\\,v(x)+u(x)\\,v'(x)}{\\big(v(x)\\big)^2} \\)",
+        "\\( \\dfrac{u(x)\\,v'(x)-u'(x)\\,v(x)}{\\big(v(x)\\big)^2} \\)"
+      ],
+      "correctIndices": [0],
+      "timeLimit": 45
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Für die Verkettung \\( h(x)=f(g(x)) \\) gilt nach der Kettenregel \\( h'(x)= \\) ?",
+      "options": [
+        "\\( f'(g(x))\\cdot g'(x) \\)",
+        "\\( f'(g(x)) \\)",
+        "\\( f'(x)\\cdot g'(x) \\)"
+      ],
+      "correctIndices": [0],
+      "timeLimit": 35
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Welche der folgenden Ableitungen elementarer Funktionen sind korrekt?",
+      "options": [
+        "\\( \\dfrac{d}{dx}\\sqrt{x} = \\dfrac{1}{2\\sqrt{x}} \\)",
+        "\\( \\dfrac{d}{dx}\\ln(x) = \\dfrac{1}{x} \\)",
+        "\\( \\dfrac{d}{dx}\\,a^x = \\ln(a)\\cdot a^x \\)",
+        "\\( \\dfrac{d}{dx}\\cos(x) = \\sin(x) \\)"
+      ],
+      "correctIndices": [0, 1, 2],
+      "timeLimit": 50
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Welche Bedingung ist die notwendige Bedingung für ein lokales Extremum einer Funktion \\( f \\)?",
+      "options": ["\\( f'(x)=0 \\)", "\\( f''(x)=0 \\)", "\\( f(x)=0 \\)"],
+      "correctIndices": [0],
+      "timeLimit": 30
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Eine hinreichende Bedingung für einen Wendepunkt ist \\( f''(x)=0 \\) und zusätzlich:",
+      "options": ["\\( f'''(x)\\neq 0 \\)", "\\( f'(x)=0 \\)", "\\( f''(x)>0 \\)"],
+      "correctIndices": [0],
+      "timeLimit": 30
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Welche Aussagen zur Symmetrie einer Funktion sind korrekt?",
+      "options": [
+        "Gilt \\( f(-x)=f(x) \\), ist die Funktion symmetrisch zur \\( y \\)-Achse",
+        "Gilt \\( f(-x)=-f(x) \\), ist die Funktion symmetrisch zum Punkt \\( (0,0) \\)",
+        "Gilt \\( f(-x)=f(x) \\), ist die Funktion symmetrisch zum Punkt \\( (0,0) \\)"
+      ],
+      "correctIndices": [0, 1],
+      "timeLimit": 40
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Welche Schritte gehören zum Formalismus der Kurvendiskussion?",
+      "options": [
+        "Bestimmung des Definitionsbereichs",
+        "Bestimmung der Symmetrie",
+        "Bestimmung der Nullstellen",
+        "Bestimmung einer Stammfunktion"
+      ],
+      "correctIndices": [0, 1, 2],
+      "timeLimit": 40
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Wie ergibt sich bei gebrochen rationalen Funktionen die Asymptote?",
+      "options": [
+        "durch Polynomdivision mit Rest",
+        "durch einmaliges Ableiten",
+        "durch Integration über den Definitionsbereich"
+      ],
+      "correctIndices": [0],
+      "timeLimit": 30
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Welcher Ausdruck ist gleich \\( a^{x+y} \\)?",
+      "options": [
+        "\\( a^{x}\\cdot a^{y} \\)",
+        "\\( a^{x}+a^{y} \\)",
+        "\\( (a^{x})^{y} \\)"
+      ],
+      "correctIndices": [0],
+      "timeLimit": 30
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Welche Logarithmus-Rechenregeln sind korrekt?",
+      "options": [
+        "\\( \\log_a(x\\cdot y)=\\log_a(x)+\\log_a(y) \\)",
+        "\\( \\log_a(x^{y})=y\\cdot\\log_a(x) \\)",
+        "\\( \\log_a(a)=1 \\)",
+        "\\( \\log_a(x+y)=\\log_a(x)\\cdot\\log_a(y) \\)"
+      ],
+      "correctIndices": [0, 1, 2],
+      "timeLimit": 50
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Das Betriebsoptimum ist definiert als ...",
+      "options": [
+        "Minimum der Stückkostenfunktion (langfristige Preisuntergrenze)",
+        "Minimum der variablen Stückkosten (kurzfristige Preisuntergrenze)",
+        "Maximum der Gewinnfunktion"
+      ],
+      "correctIndices": [0],
+      "timeLimit": 35
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Die Wachstumsrate (relative Änderungsrate) von \\( f \\) an der Stelle \\( x \\) ist ...",
+      "options": [
+        "\\( \\dfrac{f'(x)}{f(x)} \\)",
+        "\\( f'(x)\\cdot f(x) \\)",
+        "\\( \\dfrac{f(x)}{f'(x)} \\)"
+      ],
+      "correctIndices": [0],
+      "timeLimit": 30
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Welche Aussagen zur Elastizität \\( \\epsilon_{f,x} \\) sind korrekt?",
+      "options": [
+        "\\( |\\epsilon_{f,x}|>1 \\): an dieser Stelle elastisch",
+        "\\( |\\epsilon_{f,x}|<1 \\): an dieser Stelle unelastisch",
+        "\\( \\epsilon_{f,x}<0 \\): gegenläufige Bewegung (z. B. Nachfragefunktion)",
+        "\\( \\epsilon_{f,x}>0 \\): gegenläufige Bewegung"
+      ],
+      "correctIndices": [0, 1, 2],
+      "timeLimit": 50
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Nach dem Hauptsatz der Differential- und Integralrechnung gilt (mit \\( F'=f \\)): \\( \\int_{a}^{b} f(x)\\,dx = \\) ?",
+      "options": ["\\( F(b)-F(a) \\)", "\\( F(a)-F(b) \\)", "\\( f(b)-f(a) \\)"],
+      "correctIndices": [0],
+      "timeLimit": 35
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Welche Eigenschaften von Integralen sind korrekt?",
+      "options": [
+        "\\( \\int_{a}^{a} f(x)\\,dx = 0 \\)",
+        "\\( \\int_{a}^{b} f(x)\\,dx = -\\int_{b}^{a} f(x)\\,dx \\)",
+        "\\( \\int_{a}^{b} f(x)\\,dx = \\int_{a}^{c} f(x)\\,dx + \\int_{c}^{b} f(x)\\,dx \\) für \\( a\\le c\\le b \\)",
+        "\\( \\int_{a}^{b} f(x)\\,dx = \\int_{b}^{a} f(x)\\,dx \\)"
+      ],
+      "correctIndices": [0, 1, 2],
+      "timeLimit": 55
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Eine Funktion \\( F(x) \\) heißt Stammfunktion von \\( f(x) \\), falls gilt:",
+      "options": ["\\( F'(x)=f(x) \\)", "\\( F(x)=f'(x) \\)", "\\( F''(x)=f(x) \\)"],
+      "correctIndices": [0],
+      "timeLimit": 30
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Die partielle Integration entsteht aus welcher Regel der Differentialrechnung?",
+      "options": ["der Produktregel", "der Quotientenregel", "der Kettenregel"],
+      "correctIndices": [0],
+      "timeLimit": 30
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Welche Situationen führen gemäß Text zu einem uneigentlichen Integral?",
+      "options": [
+        "Die Funktion \\( f \\) ist unbeschränkt",
+        "Das Integrationsintervall \\( [a,b] \\) reicht ins Unendliche",
+        "Die Funktion \\( f \\) besitzt eine Nullstelle im Intervall"
+      ],
+      "correctIndices": [0, 1],
+      "timeLimit": 40
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Wie lautet die allgemeine Cobb-Douglas-Produktionsfunktion?",
+      "options": [
+        "\\( f(r_1,r_2)=A\\cdot r_1^{\\alpha}\\cdot r_2^{\\beta} \\)",
+        "\\( f(r_1,r_2)=A\\cdot (r_1+r_2) \\)",
+        "\\( f(r_1,r_2)=\\alpha\\, r_1 + \\beta\\, r_2 \\)"
+      ],
+      "correctIndices": [0],
+      "timeLimit": 35
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Der Satz von Schwarz besagt: Existiert eine der gemischten zweiten Ableitungen und ist stetig, dann ...",
+      "options": [
+        "existiert auch die andere und beide sind gleich",
+        "ist die Funktion konstant",
+        "ist die Funktion linear"
+      ],
+      "correctIndices": [0],
+      "timeLimit": 35
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Wie lautet das totale Differential einer Funktion \\( f(x_1,x_2) \\)?",
+      "options": [
+        "\\( df = \\dfrac{\\partial f}{\\partial x_1}\\,dx_1 + \\dfrac{\\partial f}{\\partial x_2}\\,dx_2 \\)",
+        "\\( df = \\dfrac{\\partial f}{\\partial x_1}\\cdot \\dfrac{\\partial f}{\\partial x_2} \\)",
+        "\\( df = \\dfrac{\\partial^2 f}{\\partial x_1\\,\\partial x_2} \\)"
+      ],
+      "correctIndices": [0],
+      "timeLimit": 40
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Notwendige Bedingung für ein Extremum von \\( f(x_1,x_2) \\) (ohne Nebenbedingung) ist ...",
+      "options": [
+        "\\( f_{x_1}=f_{x_2}=0 \\)",
+        "\\( f_{x_1}\\cdot f_{x_2}=0 \\)",
+        "\\( f_{x_1 x_1}=0 \\)"
+      ],
+      "correctIndices": [0],
+      "timeLimit": 35
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Mit \\( D = f_{x_1 x_1}\\cdot f_{x_2 x_2} - (f_{x_1 x_2})^2 \\): Wann liegt ein Sattelpunkt vor?",
+      "options": [
+        "\\( D<0 \\)",
+        "\\( D>0 \\) und \\( f_{x_1 x_1}>0 \\)",
+        "\\( D>0 \\) und \\( f_{x_1 x_1}<0 \\)"
+      ],
+      "correctIndices": [0],
+      "timeLimit": 40
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Wie lautet die Lagrange-Funktion zur Optimierung von \\( f(x_1,x_2) \\) unter der Nebenbedingung \\( g(x_1,x_2)=0 \\)?",
+      "options": [
+        "\\( L(x_1,x_2,\\lambda)=f(x_1,x_2)+\\lambda\\cdot g(x_1,x_2) \\)",
+        "\\( L(x_1,x_2,\\lambda)=f(x_1,x_2)\\cdot g(x_1,x_2) \\)",
+        "\\( L(x_1,x_2,\\lambda)=f(x_1,x_2)-g(x_1,x_2) \\)"
+      ],
+      "correctIndices": [0],
+      "timeLimit": 40
+    },
+    {
+      "type": "estimation",
+      "text": "Berechnen Sie \\( f'(2) \\) für \\( f(x)=x^3 \\).  (Es gilt \\( \\tfrac{d}{dx}x^n = n\\,x^{n-1} \\).)",
+      "correctAnswer": 12,
+      "timeLimit": 60
+    },
+    {
+      "type": "estimation",
+      "text": "Berechnen Sie die Steigung der Tangente an \\( f(x)=x^2 \\) an der Stelle \\( x=5 \\).",
+      "correctAnswer": 10,
+      "timeLimit": 60
+    },
+    {
+      "type": "estimation",
+      "text": "Berechnen Sie das bestimmte Integral \\( \\int_{0}^{3} 2x\\,dx \\).",
+      "correctAnswer": 9,
+      "timeLimit": 60
+    },
+    {
+      "type": "estimation",
+      "text": "Berechnen Sie \\( \\int_{1}^{2} x^2\\,dx \\) (auf 2 Nachkommastellen).",
+      "correctAnswer": 2.33,
+      "timeLimit": 90
+    },
+    {
+      "type": "estimation",
+      "text": "Gegeben \\( f(x)=x^4 \\). Berechnen Sie die Elastizität \\( \\epsilon_{f,x}=\\tfrac{f'(x)}{f(x)}\\cdot x \\) an der Stelle \\( x=2 \\).",
+      "correctAnswer": 4,
+      "timeLimit": 90
+    },
+    {
+      "type": "estimation",
+      "text": "Berechnen Sie die Wachstumsrate \\( r_{f,x}=\\tfrac{f'(x)}{f(x)} \\) für \\( f(x)=e^{2x} \\) an der Stelle \\( x=1 \\).",
+      "correctAnswer": 2,
+      "timeLimit": 75
+    },
+    {
+      "type": "estimation",
+      "text": "Berechnen Sie \\( f'(1) \\) für \\( f(x)=x^2\\cdot e^{x} \\) (auf 2 Nachkommastellen, \\( e\\approx 2{,}718 \\)).",
+      "correctAnswer": 8.15,
+      "timeLimit": 90
+    },
+    {
+      "type": "estimation",
+      "text": "Berechnen Sie \\( f'(0) \\) für \\( f(x)=(2x+1)^3 \\) (Kettenregel).",
+      "correctAnswer": 6,
+      "timeLimit": 75
+    },
+    {
+      "type": "estimation",
+      "text": "Gegeben \\( f(x_1,x_2)=4x_1^2 + 2x_1 x_2^2 - x_1 \\). Berechnen Sie \\( \\tfrac{\\partial f}{\\partial x_1} \\) an der Stelle \\( (1,2) \\).",
+      "correctAnswer": 15,
+      "timeLimit": 90
+    },
+    {
+      "type": "estimation",
+      "text": "Berechnen Sie \\( \\int_{0}^{\\pi} \\sin(x)\\,dx \\).",
+      "correctAnswer": 2,
+      "timeLimit": 75
+    }
+  ]
+}
