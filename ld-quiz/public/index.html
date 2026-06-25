@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Quiz Demo</title>
+        <link rel="stylesheet" href="/katex/katex.min.css" />
+        <style>
+            body {
+                font-family: system-ui, sans-serif;
+                max-width: 800px;
+                margin: 2rem auto;
+                padding: 1rem;
+            }
+            h1 {
+                color: #1e293b;
+            }
+            .slide {
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                border-radius: 0.5rem;
+                padding: 2rem;
+                margin: 2rem 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="slide">
+            <h2>Upload Your Quiz</h2>
+            <p>
+                Select a quiz JSON file to upload, e.g.
+                <code>lineare-algebra-quiz.json</code>.
+            </p>
+            <!--
+                Specify the server url if required:
+                E.g.,
+                    <ld-quiz server-url="http://localhost:3000"></ld-quiz>
+                or
+                    <ld-quiz server-url="http://192.168.178.151:3000"></ld-quiz>
+            -->
+            <ld-quiz></ld-quiz>
+        </div>
+        <script type="module" src="/client/ld-quiz.js"></script>
+    </body>
+</html>

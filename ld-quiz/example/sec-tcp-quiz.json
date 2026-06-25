@@ -1,0 +1,223 @@
+{
+  "title": "Netzwerksicherheit: TCP und Angriffe",
+  "questions": [
+    {
+      "type": "multiple-choice",
+      "text": "Auf welcher Schicht des TCP/IP-Modells arbeitet TCP?",
+      "options": [
+        "Application Layer",
+        "Transport Layer",
+        "Network Layer",
+        "Data Link Layer"
+      ],
+      "correctIndices": [1],
+      "timeLimit": 30
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Welche Eigenschaft beschreibt TCP am besten?",
+      "options": [
+        "Verbindungslos und unzuverlässig",
+        "Nur für lokale Netzwerke",
+        "Ohne Fehlererkennung",
+        "Verbindungsorientiert und zuverlässig"
+      ],
+      "correctIndices": [3],
+      "timeLimit": 30
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Womit beginnt der dreifache TCP-Handshake?",
+      "options": ["SYN", "ACK", "RST", "FIN"],
+      "correctIndices": [0],
+      "timeLimit": 20
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Wie antwortet der Server auf ein SYN-Paket, wenn der Port geöffnet ist?",
+      "options": ["ACK", "RST", "SYN-ACK", "FIN-ACK"],
+      "correctIndices": [2],
+      "timeLimit": 25
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Wofür steht das TCP-Flag RST?",
+      "options": [
+        "Synchronisierung",
+        "Bestätigung",
+        "Zurücksetzen/Abbrechen der Verbindung",
+        "Verbindungsabbau"
+      ],
+      "correctIndices": [2],
+      "timeLimit": 25
+    },
+    {
+      "type": "estimation",
+      "text": "Wie viele Bit hat eine TCP-Portnummer?",
+      "correctAnswer": 16,
+      "timeLimit": 20
+    },
+    {
+      "type": "estimation",
+      "text": "Wie viele verschiedene TCP-Portnummern gibt es maximal?",
+      "correctAnswer": 65536,
+      "timeLimit": 25
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Welcher Portbereich ist auf Unix-Systemen privilegiert?",
+      "options": ["0-255", "0-1023", "1024-49151", "49152-65535"],
+      "correctIndices": [1],
+      "timeLimit": 25
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Welcher Standardport wird von HTTPS verwendet?",
+      "options": ["80", "22", "443", "25"],
+      "correctIndices": [2],
+      "timeLimit": 20
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Welcher Dienst nutzt standardmäßig den Port 22?",
+      "options": ["SSH", "FTP", "SMTP", "DNS"],
+      "correctIndices": [0],
+      "timeLimit": 20
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Welcher Port-Scan baut vollständige TCP-Verbindungen auf?",
+      "options": ["SYN-Scan", "FIN-Scan", "Idle-Scan", "Connect-Scan"],
+      "correctIndices": [3],
+      "timeLimit": 30
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Bei einem SYN-Scan antwortet ein geöffneter Port mit SYN-ACK. Was sendet der Scanner typischerweise zurück?",
+      "options": ["ACK", "RST", "SYN", "FIN"],
+      "correctIndices": [1],
+      "timeLimit": 30
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Welcher Scan sendet ein TCP-Segment ohne gesetzte Flags?",
+      "options": ["FIN-Scan", "XMAS-Scan", "NULL-Scan", "ACK-Scan"],
+      "correctIndices": [2],
+      "timeLimit": 25
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Welcher Scan setzt die Flags FIN, PSH und URG?",
+      "options": ["NULL-Scan", "XMAS-Scan", "FIN-Scan", "SYN-Scan"],
+      "correctIndices": [1],
+      "timeLimit": 25
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Welche Eigenschaft muss ein Zombie bei einem Idle Scan in der Regel haben?",
+      "options": [
+        "Er muss der Zielserver sein",
+        "Er sollte wenig eigenen Netzverkehr",
+        "Er muss ein aktiver Client sein",
+        "Es muss eine vorhersagbare IP ID besitzen"
+      ],
+      "correctIndices": [1, 3],
+      "timeLimit": 35
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Welcher Seitenkanal wird bei einem Idle Scan ausgenutzt?",
+      "options": ["TTL", "IP ID", "TCP-Window-Size", "MAC-Adresse"],
+      "correctIndices": [1],
+      "timeLimit": 30
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Was ist das Ziel eines Denial-of-Service-Angriffs?",
+      "options": [
+        "Daten stehlen",
+        "Einen Dienst oder ein System unbrauchbar machen",
+        "Verschlüsselte Kommunikation abhören",
+        "Malware installieren"
+      ],
+      "correctIndices": [1],
+      "timeLimit": 25
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Welcher DoS-Angriff nutzt übergroße ICMP-Pakete aus?",
+      "options": ["SYN-Flood", "Smurf", "DRDoS", "Ping of Death"],
+      "correctIndices": [3],
+      "timeLimit": 25
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Bei welchem Angriff sendet der Angreifer viele SYN-Pakete, ohne den Handshake zu vervollständigen?",
+      "options": ["SYN-Flooding", "ACK-Scan", "Connection Hijacking", "Idle-Scan"],
+      "correctIndices": [0],
+      "timeLimit": 25
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Welche Abwehrmaßnahme verhindert, dass der Server halboffene Verbindungen speichern muss?",
+      "options": ["Port Knocking", "SYN-Cookies", "Egress Filtering", "IDS"],
+      "correctIndices": [1],
+      "timeLimit": 30
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Wodurch entsteht der Verstärkungseffekt bei einem DRDoS-Angriff?",
+      "options": [
+        "Durch den Einsatz sehr vieler Bots",
+        "Durch kleine Anfragen, die große Antworten auslösen, kombiniert mit IP-Spoofing",
+        "Durch Verschlüsselung des Traffics",
+        "Durch direkte Verbindungen zum Opfer"
+      ],
+      "correctIndices": [1],
+      "timeLimit": 35
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Was charakterisiert einen Low-and-Slow-Angriff?",
+      "options": [
+        "Sehr hohe Bandbreite",
+        "Ein einzelnes großes Paket",
+        "Wenige, sehr langsame Verbindungen",
+        "Schnelle, massenhafte Anfragen"
+      ],
+      "correctIndices": [2],
+      "timeLimit": 30
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Welcher Angriff hält HTTP-Verbindungen durch langsam gesendete, unvollständige Anfragen offen?",
+      "options": ["Slowloris", "SYN-Flood", "Ping of Death", "Smurf"],
+      "correctIndices": [0],
+      "timeLimit": 30
+    },
+    {
+      "type": "multiple-choice",
+      "text": "Wozu dient Egress Filtering?",
+      "options": [
+        "Eingehende DDoS-Angriffe erkennen",
+        "Verhindern, dass Pakete mit gefälschten Absenderadressen das Netz verlassen",
+        "Ports verstecken",
+        "Verschlüsselung erzwingen"
+      ],
+      "correctIndices": [1],
+      "timeLimit": 30
+    },
+    {
+      "type": "estimation",
+      "text": "Wie viele Source-IP-Adressen waren laut dem im Folienmaterial zitierten Cloudflare-Angriff von Mai 2025 an dem DDoS-Angriff beteiligt?",
+      "correctAnswer": 122145,
+      "timeLimit": 45
+    },
+    {
+      "type": "estimation",
+      "text": "Wie viele Millionen Requests pro Sekunde erreichte der im Folienmaterial erwähnte Google-DDoS-Angriff von August 2023 laut Google?",
+      "correctAnswer": 398,
+      "timeLimit": 45
+    }
+  ]
+}
