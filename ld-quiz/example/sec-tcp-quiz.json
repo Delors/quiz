@@ -15,7 +15,7 @@
     },
     {
       "type": "multiple-choice",
-      "text": "Welche Eigenschaft beschreibt TCP am besten?",
+      "text": "Welche Eigenschaft(en) beschreibt TCP am besten?",
       "options": [
         "Verbindungslos und unzuverlässig",
         "Nur für lokale Netzwerke",
@@ -114,7 +114,7 @@
     },
     {
       "type": "multiple-choice",
-      "text": "Welche Eigenschaft muss ein Zombie bei einem Idle Scan in der Regel haben?",
+      "text": "Welche Eigenschaft(en) muss ein Zombie bei einem Idle Scan in der Regel haben?",
       "options": [
         "Er muss der Zielserver sein",
         "Er sollte wenig eigenen Netzverkehr",
